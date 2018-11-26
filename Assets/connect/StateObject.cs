@@ -25,6 +25,7 @@ public class StateObject : MonoBehaviour {
     {
         pos_Socket = new ClientSocket();
         msg_Socket = new ClientSocket();
+        Players = new Hashtable();
     }
 
     public IEnumerator login(string _url, WWWForm _wForm)
@@ -180,14 +181,15 @@ public class StateObject : MonoBehaviour {
     {
         try
         {
-            Debug.Log(data);
+            Players.Clear();
+            //Debug.Log(data);
             PullModel obj = JsonUtility.FromJson<PullModel>(data);
             if (obj.socketmodel.Length > 0)
             {
                 foreach (Callback_SocketModel item in obj.socketmodel)
                 {
                     GameObject gobj;
-                    if ((gobj = GameObject.Find(item.id)) != null)
+                    if ((gobj = GameObject.Find(item.id)) != null && gobj.tag == "Player")
                     {
                         //gobj.GetComponent<Rigidbody>().velocity = new Vector3(item.velocity_x, item.velocity_y, item.velocity_z);
                         gobj.GetComponent<Rigidbody>().MovePosition(new Vector3(item.position_x, item.position_y, item.position_z));
@@ -221,8 +223,10 @@ public class StateObject : MonoBehaviour {
                 }
                 foreach (GameObject Player in GameObject.FindGameObjectsWithTag("Player"))//删除掉可视距离之外的玩家
                 {
-                    if (!Players.Contains(Player.name))
+                    if (!Players.Contains(Player.name) && Player.name != "role") 
                     {
+                        //Debug.Log("破坏");
+                        //Debug.Log(Player.name);
                         Destroy(Player);
                     }
                 }
@@ -239,7 +243,12 @@ public class StateObject : MonoBehaviour {
                 }
             }
         }
-        catch { return; }
+        catch(Exception e)
+        {
+            Debug.Log(e.Message);
+            Debug.Log(e.StackTrace);
+            return;
+        }
     }
 
     /*public void pullmsg(int no ,string id)//不发消息，只收上下线消息
@@ -327,6 +336,7 @@ public class StateObject : MonoBehaviour {
     }
     public void send_back(string data)//用于接收到玩家发送的消息时的回调
     {
+        Debug.Log(data);
         try
         {
             Callback_MsgModel obj = JsonUtility.FromJson<Callback_MsgModel>(data);
@@ -350,13 +360,20 @@ public class StateObject : MonoBehaviour {
                     }
                     if (item.type == 1 && item.roomno == GameObject.Find("GameManagement").GetComponent<GameManagement>().RoomNo)
                     {
-                        GameObject roleInstance = Instantiate(GameObject.Find("role"), new Vector3(item.position_x, item.position_y, item.position_z), Quaternion.Euler(0f, 0f, 0f));
+                        GameObject roleInstance = Instantiate(prefabs, new Vector3(item.position_x, item.position_y, item.position_z), Quaternion.Euler(0f, 0f, 0f)) as GameObject;
                         roleInstance.GetComponent<movement>().setup(item.username, item.nickname);
                         GameObject.Find("Chat UI").GetComponent<ChatControl>().AddContent(item.type, item.position_x, item.position_y, item.position_z, item.roomno, item.username, item.nickname, item.channel, item.content);
                     }
                     if (item.type == 2 && item.roomno == GameObject.Find("GameManagement").GetComponent<GameManagement>().RoomNo)
                     {
-                        Destroy(GameObject.Find(item.username));
+                        foreach (GameObject Player in GameObject.FindGameObjectsWithTag("Player"))
+                        {
+                            if (Player.name == item.username)
+                            {
+                                Destroy(Player);
+                            }
+                        }
+                        //Destroy(GameObject.Find(item.username));
                         GameObject.Find("Chat UI").GetComponent<ChatControl>().AddContent(item.type, item.position_x, item.position_y, item.position_z, item.roomno, item.username, item.nickname, item.channel, item.content);
                     }
                 }

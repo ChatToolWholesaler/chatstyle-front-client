@@ -96,7 +96,7 @@ public class ChatControl : MonoBehaviour {
             int channel = 1 + GetComponentInChildren<Dropdown>().value;
             GameObject.Find("StateObject").GetComponent<StateObject>().sendmsg(3, m_Targets.position.x, m_Targets.position.y, m_Targets.position.z, GameObject.Find("GameManagement").GetComponent<GameManagement>().RoomNo, GameObject.Find("GameManagement").GetComponent<GameManagement>().id, GameObject.Find("GameManagement").GetComponent<GameManagement>().nickname, channel, text);
             GetComponentInChildren<InputField>().text = "";
-            //根据选择的渠道发送消息，空值则无反应，暂时忽略附近(等九屏)，悄悄话(需要等好友列表，id搜寻以及socket转发)
+            //根据选择的渠道发送消息，空值则无反应，增加channel=4的情况（inputtoid内容为空的话就提示输入id，不为空则根据id向服务端发消息，服务器对双方发送私聊消息供聊天框添加）
         }
         else { Show(); }
     }
