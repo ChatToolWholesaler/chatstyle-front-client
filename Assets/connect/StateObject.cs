@@ -360,8 +360,8 @@ public class StateObject : MonoBehaviour {
                     }
                     if (item.type == 1 && item.roomno == GameObject.Find("GameManagement").GetComponent<GameManagement>().RoomNo)
                     {
-                        GameObject roleInstance = Instantiate(prefabs, new Vector3(item.position_x, item.position_y, item.position_z), Quaternion.Euler(0f, 0f, 0f)) as GameObject;
-                        roleInstance.GetComponent<movement>().setup(item.username, item.nickname);
+                        //GameObject roleInstance = Instantiate(prefabs, new Vector3(item.position_x, item.position_y, item.position_z), Quaternion.Euler(0f, 0f, 0f)) as GameObject;
+                        //roleInstance.GetComponent<movement>().setup(item.username, item.nickname);
                         GameObject.Find("Chat UI").GetComponent<ChatControl>().AddContent(item.type, item.position_x, item.position_y, item.position_z, item.roomno, item.username, item.nickname, item.channel, item.content);
                     }
                     if (item.type == 2 && item.roomno == GameObject.Find("GameManagement").GetComponent<GameManagement>().RoomNo)

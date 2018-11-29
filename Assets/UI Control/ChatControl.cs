@@ -94,7 +94,14 @@ public class ChatControl : MonoBehaviour {
             string text = GetComponentInChildren<InputField>().text;
             if (text == "") return;
             int channel = 1 + GetComponentInChildren<Dropdown>().value;
-            GameObject.Find("StateObject").GetComponent<StateObject>().sendmsg(3, m_Targets.position.x, m_Targets.position.y, m_Targets.position.z, GameObject.Find("GameManagement").GetComponent<GameManagement>().RoomNo, GameObject.Find("GameManagement").GetComponent<GameManagement>().id, GameObject.Find("GameManagement").GetComponent<GameManagement>().nickname, channel, text);
+            if (channel != 4)
+            {
+                GameObject.Find("StateObject").GetComponent<StateObject>().sendmsg(3, m_Targets.position.x, m_Targets.position.y, m_Targets.position.z, GameObject.Find("GameManagement").GetComponent<GameManagement>().RoomNo, GameObject.Find("GameManagement").GetComponent<GameManagement>().id, GameObject.Find("GameManagement").GetComponent<GameManagement>().nickname, channel, text);
+            }
+            else
+            {
+                GameObject.Find("StateObject").GetComponent<StateObject>().sendmsg(3, m_Targets.position.x, m_Targets.position.y, m_Targets.position.z, GameObject.Find("GameManagement").GetComponent<GameManagement>().RoomNo, GameObject.Find("ChatID").GetComponent<InputField>().text, GameObject.Find("GameManagement").GetComponent<GameManagement>().nickname, channel, text);
+            }
             GetComponentInChildren<InputField>().text = "";
             //根据选择的渠道发送消息，空值则无反应，增加channel=4的情况（inputtoid内容为空的话就提示输入id，不为空则根据id向服务端发消息，服务器对双方发送私聊消息供聊天框添加）
         }
@@ -137,6 +144,23 @@ public class ChatControl : MonoBehaviour {
                         else
                         {
                             GameObject.Find(id).GetComponentInChildren<ChatBox>().pop(content);//玩家头顶浮现气泡，记得附近局部加载玩家
+                        }
+                        break;
+                    case 4://悄悄话接收
+                        
+                        if (id == GameObject.Find("GameManagement").GetComponent<GameManagement>().id)
+                        {
+                            GameObject.Find("Channel1").GetComponent<Text>().text += ("\n" + "from<<<" + nickname + "：" + content);
+                            GameObject.Find("Channel2").GetComponent<Text>().text += ("\n" + "from<<<" + nickname + "：" + content);
+                            GameObject.Find("Channel3").GetComponent<Text>().text += ("\n" + "from<<<" + nickname + "：" + content);
+                            GameObject.Find("Channel0").GetComponent<Text>().text += ("\n" + "from<<<" + nickname + "：" + content);
+                        }
+                        else
+                        {
+                            GameObject.Find("Channel1").GetComponent<Text>().text += ("\n" + "to>>>" + nickname + "：" + content);
+                            GameObject.Find("Channel2").GetComponent<Text>().text += ("\n" + "to>>>" + nickname + "：" + content);
+                            GameObject.Find("Channel3").GetComponent<Text>().text += ("\n" + "to>>>" + nickname + "：" + content);
+                            GameObject.Find("Channel0").GetComponent<Text>().text += ("\n" + "to>>>" + nickname + "：" + content);
                         }
                         break;
                     default:

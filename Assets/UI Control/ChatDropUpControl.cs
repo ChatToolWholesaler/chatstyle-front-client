@@ -18,7 +18,7 @@ public class ChatDropUpControl : MonoBehaviour {
     }
     public void ShowPrefix()
     {
-        chatinput.GetComponent<InputField>().text = "To>> " + toIDInputField.GetComponent<InputField>().text + ":";
+        chatinput.GetComponent<InputField>().text = "To>>> " + toIDInputField.GetComponent<InputField>().text + ":";
         GameObject.Find("ChatInput").GetComponent<InputField>().ActivateInputField();
     }
     void Start()

@@ -172,7 +172,10 @@ public class GameManagement : MonoBehaviour {
         {
             m_Targets.position = SpawnPosition[RoomNo - 1];
         }
-        m_Targets.position = new Vector3(0f, 0.5f, 0f);
+        else
+        {
+            m_Targets.position = new Vector3(0f, 0.5f, 0f);
+        }
         GameObject.Find("BGM").GetComponent<BGMControl>().LoadBGM(RoomNo-1);
         GameObject.Find("BGM").GetComponent<AudioSource>().Play();
         GameObject.Find("Main Camera").GetComponent<Camera>().cullingMask = -1;
