@@ -7,8 +7,8 @@ public class login : MonoBehaviour {
 
     private void submit()
     {
-        string username = GameObject.Find("username").GetComponent<InputField>().text;
-        string password = GameObject.Find("password").GetComponent<InputField>().text;
+        string username = GameObject.Find("Login UI/username").GetComponent<InputField>().text;
+        string password = GameObject.Find("Login UI/password").GetComponent<InputField>().text;
         WWWForm form = new WWWForm();
         form.AddField("username", username);
         form.AddField("password", password);

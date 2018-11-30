@@ -13,11 +13,11 @@ public class register : MonoBehaviour
 
     {
 
-        string username = GameObject.Find("username_r").GetComponent<InputField>().text;
+        string username = GameObject.Find("Register UI/username_r").GetComponent<InputField>().text;
 
-        string password = GameObject.Find("password_r").GetComponent<InputField>().text;
+        string password = GameObject.Find("Register UI/password_r").GetComponent<InputField>().text;
 
-        string nickname = GameObject.Find("nickname").GetComponent<InputField>().text;
+        string nickname = GameObject.Find("Register UI/nickname").GetComponent<InputField>().text;
 
         //向后台发送数据
 

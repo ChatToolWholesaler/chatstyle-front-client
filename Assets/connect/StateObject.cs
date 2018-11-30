@@ -145,11 +145,11 @@ public class StateObject : MonoBehaviour {
     }*/
 
     public void socket(string id,string nickname, float position_x, float position_y, float position_z, float velocity_x, float velocity_y, float velocity_z, float forward_x, float forward_z, int roomno)
-    {
+    {//记得定时请求一次周围人
         SocketModel obj = new SocketModel();
         obj.id = id;
         obj.nickname = nickname;
-        obj.position_x = position_x;
+        /*obj.position_x = position_x;
         obj.position_y = position_y;
         obj.position_z = position_z;
         obj.velocity_x = velocity_x;
@@ -157,7 +157,10 @@ public class StateObject : MonoBehaviour {
         obj.velocity_z = velocity_z;
         obj.forward_x = forward_x;
         obj.forward_z = forward_z;
-        obj.roomno = roomno;
+        obj.roomno = roomno;*/
+        obj.p = ((uint)((position_x + 1024) * 32) << 16)| ((uint)((position_y + 1024) * 32));
+        obj.v = ((uint)((velocity_x + 64) * 8) << 20) | ((uint)((velocity_y + 64) * 8) << 10) | ((uint)((velocity_z + 64) * 8));
+        obj.r = ((uint)(roomno) << 30) | ((uint)((position_z + 1024) * 32) << 14) | ((uint)((forward_x + 1) * 64) << 7) | ((uint)((forward_z + 1) * 64));
         string json = JsonUtility.ToJson(obj);
         //Debug.Log(json);
         pos_Socket.AsyncSendData(json,1);
@@ -188,16 +191,25 @@ public class StateObject : MonoBehaviour {
             {
                 foreach (Callback_SocketModel item in obj.socketmodel)
                 {
+                    float position_x = ((float)(item.p >> 16)) / 32 - 1024;
+                    float position_y = ((float)((item.p << 16) >> 16)) / 32 - 1024;
+                    float position_z = ((float)((item.r << 2) >> 16)) / 32 - 1024;
+                    float velocity_x = ((float)(item.v >> 20)) / 8 - 64;
+                    float velocity_y = ((float)((item.v << 12) >> 22)) / 8 - 64;
+                    float velocity_z = ((float)((item.v << 22) >> 22)) / 8 - 64; ;
+                    float forward_x = ((float)((item.r << 18) >> 25)) / 64 - 1;
+                    float forward_z = ((float)((item.r << 25) >> 25)) / 64 - 1;
+                    int roomno = (int)(item.r >> 30);
                     GameObject gobj;
-                    if ((gobj = GameObject.Find(item.id)) != null && gobj.tag == "Player")
+                    if ((gobj = GameObject.Find(item.id)) != null && gobj.tag == "Player")//记得优化性能
                     {
                         //gobj.GetComponent<Rigidbody>().velocity = new Vector3(item.velocity_x, item.velocity_y, item.velocity_z);
-                        gobj.GetComponent<Rigidbody>().MovePosition(new Vector3(item.position_x, item.position_y, item.position_z));
-                        gobj.transform.forward = new Vector3(item.forward_x, 0f, item.forward_z);
-                        gobj.transform.position = new Vector3(item.position_x, item.position_y, item.position_z);
+                        gobj.GetComponent<Rigidbody>().MovePosition(new Vector3(position_x, position_y, position_z));
+                        gobj.transform.forward = new Vector3(forward_x, 0f, forward_z);
+                        gobj.transform.position = new Vector3(position_x, position_y, position_z);
                         Players.Add(item.id, gobj);
                     }
-                    else if (item.id == GameObject.Find("GameManagement").GetComponent<GameManagement>().id)
+                    else if (item.id == GameObject.Find("GameManagement").GetComponent<GameManagement>().id)//记得优化性能
                     {
                         /*gobj = GameObject.Find("role");
                         //gobj.GetComponent<Rigidbody>().velocity = new Vector3(item.velocity_x, item.velocity_y, item.velocity_z);
@@ -209,9 +221,9 @@ public class StateObject : MonoBehaviour {
                     else
                     {
                         GameObject tmpObj = Instantiate(prefabs/*, pos, Quaternion.identity*/) as GameObject;
-                        tmpObj.transform.position = new Vector3(item.position_x, item.position_y, item.position_z);
-                        tmpObj.transform.forward = new Vector3(item.forward_x, 0f, item.forward_z);
-                        tmpObj.GetComponent<Rigidbody>().velocity = new Vector3(item.velocity_x, item.velocity_y, item.velocity_z);
+                        tmpObj.transform.position = new Vector3(position_x, position_y, position_z);
+                        tmpObj.transform.forward = new Vector3(forward_x, 0f, forward_z);
+                        tmpObj.GetComponent<Rigidbody>().velocity = new Vector3(velocity_x, velocity_y, velocity_z);
                         tmpObj.GetComponent<movement>().setup(item.id, item.nickname);
                         Players.Add(item.id, tmpObj);
                         //GameObject roleInstance = Instantiate(GameObject.Find("role"), new Vector3(item.position_x, item.position_y, item.position_z), Quaternion.Euler(0f, 0f, 0f));
@@ -429,7 +441,7 @@ public class Callback_SocketModel
 {
     public string id;
     public string nickname;
-    public float position_x;
+    /*public float position_x;
     public float position_y;
     public float position_z;
     public float velocity_x;
@@ -437,14 +449,17 @@ public class Callback_SocketModel
     public float velocity_z;
     public float forward_x;
     public float forward_z;
-    public int roomno;
+    public int roomno;*/
+    public uint p;//前16位存储position_x,后16位存储position_y
+    public uint v;//分10位存储velocity_xyz
+    public uint r;//前2位存储场景号，后数16位存储position_z,后数14位分7位存储forward
 }
 [System.Serializable]
-public class SocketModel
+public class SocketModel//简化变量名并浓缩为三个int型数据，想办法取得服务器接收到至少一次id与nickname的信号(例如回传id为自身id的同时nickname为null)，之后不再传输id与nickname（null）。
 {
     public string id;
     public string nickname;
-    public float position_x;
+    /*public float position_x;
     public float position_y;
     public float position_z;
     public float velocity_x;
@@ -452,7 +467,10 @@ public class SocketModel
     public float velocity_z;
     public float forward_x;
     public float forward_z;
-    public int roomno;
+    public int roomno;*/
+    public uint p;//前16位存储position_x,后16位存储position_y
+    public uint v;//分10位存储velocity_xyz
+    public uint r;//前2位存储场景号，后数16位存储position_z,后数14位分7位存储forward
 }
 [System.Serializable]
 public class PullModel
