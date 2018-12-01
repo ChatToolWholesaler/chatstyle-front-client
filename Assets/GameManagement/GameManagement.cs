@@ -16,6 +16,7 @@ public class GameManagement : MonoBehaviour {
     [HideInInspector] public GameObject con_obj=null;
     public Vector3[] SpawnPosition;
     private int deltaframe = 0;//计帧数
+    private float deltatimes = 0;//计时间
     private GameObject maincamera;
     private GameObject manu;
     private GameObject chatitem;
@@ -32,6 +33,7 @@ public class GameManagement : MonoBehaviour {
         manu = GameObject.Find("Manu");
         chatitem = GameObject.Find("ChatItem");
         deltaframe = 0;
+        deltatimes = 0;
         con_obj = GameObject.Find("StateObject");
         m_Targets = GameObject.Find("role").transform;
         role = GameObject.Find("role");
@@ -134,6 +136,7 @@ public class GameManagement : MonoBehaviour {
         if (con_obj != null && con_obj.GetComponent<StateObject>().is_msg_connected()) //每隔10帧拉一次消息，现在用途仅仅是通过心跳判定客户端是否离线
         {
             //con_obj.GetComponent<StateObject>().pullmsg(RoomNo, id);
+            deltatimes += Time.deltaTime;
             deltaframe++;
             if (deltaframe >= 10) {
                 deltaframe = 0;
@@ -141,7 +144,15 @@ public class GameManagement : MonoBehaviour {
             }
             if (deltaframe % 3 == 0)
             {
-                con_obj.GetComponent<StateObject>().socket(id, nickname, m_Targets.position.x, m_Targets.position.y, m_Targets.position.z, role.GetComponent<Rigidbody>().velocity.x, role.GetComponent<Rigidbody>().velocity.y, role.GetComponent<Rigidbody>().velocity.z, m_Targets.forward.x, m_Targets.forward.z, RoomNo);
+                if (deltatimes > 1)
+                {
+                    deltatimes = 0;
+                    con_obj.GetComponent<StateObject>().socket(id, nickname, m_Targets.position.x, m_Targets.position.y, m_Targets.position.z, role.GetComponent<Rigidbody>().velocity.x, role.GetComponent<Rigidbody>().velocity.y, role.GetComponent<Rigidbody>().velocity.z, m_Targets.forward.x, m_Targets.forward.z, RoomNo);
+                }
+                else
+                {
+                    con_obj.GetComponent<StateObject>().socket(id, null, m_Targets.position.x, m_Targets.position.y, m_Targets.position.z, role.GetComponent<Rigidbody>().velocity.x, role.GetComponent<Rigidbody>().velocity.y, role.GetComponent<Rigidbody>().velocity.z, m_Targets.forward.x, m_Targets.forward.z, RoomNo);
+                }
             }
             
         }

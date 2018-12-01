@@ -19,13 +19,17 @@ public class StateObject : MonoBehaviour {
     public ClientSocket pos_Socket;
     public ClientSocket msg_Socket;
     public GameObject prefabs = null;
-    public Hashtable Players;//存储当前附近的玩家
+    public GameObject GM;
+    //public Hashtable Players;//存储当前附近的玩家
+    public List<GameObject> Players;
 
     void Awake()
     {
         pos_Socket = new ClientSocket();
         msg_Socket = new ClientSocket();
-        Players = new Hashtable();
+        //Players = new Hashtable();
+        Players = new List<GameObject>();
+        GM = GameObject.Find("GameManagement");
     }
 
     public IEnumerator login(string _url, WWWForm _wForm)
@@ -158,6 +162,9 @@ public class StateObject : MonoBehaviour {
         obj.forward_x = forward_x;
         obj.forward_z = forward_z;
         obj.roomno = roomno;*/
+        position_x -= GM.GetComponent<GameManagement>().SpawnPosition[roomno-1].x;
+        position_y -= GM.GetComponent<GameManagement>().SpawnPosition[roomno-1].y;
+        position_z -= GM.GetComponent<GameManagement>().SpawnPosition[roomno-1].z;
         obj.p = ((uint)((position_x + 1024) * 32) << 16)| ((uint)((position_y + 1024) * 32));
         obj.v = ((uint)((velocity_x + 64) * 8) << 20) | ((uint)((velocity_y + 64) * 8) << 10) | ((uint)((velocity_z + 64) * 8));
         obj.r = ((uint)(roomno) << 30) | ((uint)((position_z + 1024) * 32) << 14) | ((uint)((forward_x + 1) * 64) << 7) | ((uint)((forward_z + 1) * 64));
@@ -184,65 +191,101 @@ public class StateObject : MonoBehaviour {
     {
         try
         {
-            Players.Clear();
+            
             //Debug.Log(data);
             PullModel obj = JsonUtility.FromJson<PullModel>(data);
             if (obj.socketmodel.Length > 0)
             {
-                foreach (Callback_SocketModel item in obj.socketmodel)
+                if (obj.socketmodel[0].id != null)//此时为周围玩家加载帧
                 {
-                    float position_x = ((float)(item.p >> 16)) / 32 - 1024;
-                    float position_y = ((float)((item.p << 16) >> 16)) / 32 - 1024;
-                    float position_z = ((float)((item.r << 2) >> 16)) / 32 - 1024;
-                    float velocity_x = ((float)(item.v >> 20)) / 8 - 64;
-                    float velocity_y = ((float)((item.v << 12) >> 22)) / 8 - 64;
-                    float velocity_z = ((float)((item.v << 22) >> 22)) / 8 - 64; ;
-                    float forward_x = ((float)((item.r << 18) >> 25)) / 64 - 1;
-                    float forward_z = ((float)((item.r << 25) >> 25)) / 64 - 1;
-                    int roomno = (int)(item.r >> 30);
-                    GameObject gobj;
-                    if ((gobj = GameObject.Find(item.id)) != null && gobj.tag == "Player")//记得优化性能
+                    Players.Clear();
+
+                    foreach (Callback_SocketModel item in obj.socketmodel)
                     {
-                        //gobj.GetComponent<Rigidbody>().velocity = new Vector3(item.velocity_x, item.velocity_y, item.velocity_z);
-                        gobj.GetComponent<Rigidbody>().MovePosition(new Vector3(position_x, position_y, position_z));
-                        gobj.transform.forward = new Vector3(forward_x, 0f, forward_z);
-                        gobj.transform.position = new Vector3(position_x, position_y, position_z);
-                        Players.Add(item.id, gobj);
+                        int roomno = (int)(item.r >> 30);
+                        float position_x = ((float)(item.p >> 16)) / 32 - 1024 + GM.GetComponent<GameManagement>().SpawnPosition[roomno - 1].x;
+                        float position_y = ((float)((item.p << 16) >> 16)) / 32 - 1024 + GM.GetComponent<GameManagement>().SpawnPosition[roomno - 1].y;
+                        float position_z = ((float)((item.r << 2) >> 16)) / 32 - 1024 + GM.GetComponent<GameManagement>().SpawnPosition[roomno - 1].z;
+                        float velocity_x = ((float)(item.v >> 20)) / 8 - 64;
+                        float velocity_y = ((float)((item.v << 12) >> 22)) / 8 - 64;
+                        float velocity_z = ((float)((item.v << 22) >> 22)) / 8 - 64; ;
+                        float forward_x = ((float)((item.r << 18) >> 25)) / 64 - 1;
+                        float forward_z = ((float)((item.r << 25) >> 25)) / 64 - 1;
+
+                        GameObject gobj = null;
+                        bool temp = false;
+                        foreach (GameObject P in GameObject.FindGameObjectsWithTag("Player"))//判断是否存在这个玩家
+                        {
+                            if (P.name == item.id)
+                            {
+                                temp = true;
+                                gobj = P;
+                                break;
+                            }
+                        }
+                        if (temp)
+                        {
+                            //gobj.GetComponent<Rigidbody>().velocity = new Vector3(item.velocity_x, item.velocity_y, item.velocity_z);
+                            gobj.GetComponent<Rigidbody>().MovePosition(new Vector3(position_x, position_y, position_z));
+                            gobj.transform.forward = new Vector3(forward_x, 0f, forward_z);
+                            gobj.transform.position = new Vector3(position_x, position_y, position_z);
+                            Players.Add(gobj);
+                        }
+                        else if (item.id == GM.GetComponent<GameManagement>().id)
+                        {
+                            /*gobj = GameObject.Find("role");
+                            //gobj.GetComponent<Rigidbody>().velocity = new Vector3(item.velocity_x, item.velocity_y, item.velocity_z);
+                            gobj.GetComponent<Rigidbody>().MovePosition(new Vector3(item.position_x, item.position_y, item.position_z));
+                            gobj.transform.forward = new Vector3(item.forward_x, 0f, item.forward_z);
+                            gobj.transform.position = new Vector3(item.position_x, item.position_y, item.position_z);
+                            Players.Add(item.id, gobj);*/
+                        }
+                        else
+                        {
+                            GameObject tmpObj = Instantiate(prefabs/*, pos, Quaternion.identity*/) as GameObject;
+                            tmpObj.transform.position = new Vector3(position_x, position_y, position_z);
+                            tmpObj.transform.forward = new Vector3(forward_x, 0f, forward_z);
+                            tmpObj.GetComponent<Rigidbody>().velocity = new Vector3(velocity_x, velocity_y, velocity_z);
+                            tmpObj.GetComponent<movement>().setup(item.id, item.nickname);
+                            Players.Add(tmpObj);
+                            //GameObject roleInstance = Instantiate(GameObject.Find("role"), new Vector3(item.position_x, item.position_y, item.position_z), Quaternion.Euler(0f, 0f, 0f));
+                            //roleInstance.transform.LookAt(roleInstance.transform.position + new Vector3(item.forward_x, 0, item.forward_z));
+                            //roleInstance.GetComponent<movement>().setup(item.id, item.nickname);
+                        }
+                        //GameObject.Find(item.id).GetComponent<Rigidbody>().MovePosition(new Vector3(item.position_x, item.position_y, item.position_z));
+                        //GameObject.Find(item.id).transform.LookAt(GameObject.Find(item.id).transform.position + new Vector3(item.forward_x, 0, item.forward_z));
                     }
-                    else if (item.id == GameObject.Find("GameManagement").GetComponent<GameManagement>().id)//记得优化性能
+                    foreach (GameObject Player in GameObject.FindGameObjectsWithTag("Player"))//删除掉可视距离之外的玩家
                     {
-                        /*gobj = GameObject.Find("role");
-                        //gobj.GetComponent<Rigidbody>().velocity = new Vector3(item.velocity_x, item.velocity_y, item.velocity_z);
-                        gobj.GetComponent<Rigidbody>().MovePosition(new Vector3(item.position_x, item.position_y, item.position_z));
-                        gobj.transform.forward = new Vector3(item.forward_x, 0f, item.forward_z);
-                        gobj.transform.position = new Vector3(item.position_x, item.position_y, item.position_z);
-                        Players.Add(item.id, gobj);*/
+                        if (!Players.Contains(Player) && Player.name != "role")
+                        {
+                            //Debug.Log("破坏");
+                            //Debug.Log(Player.name);
+                            Destroy(Player);
+                        }
                     }
-                    else
-                    {
-                        GameObject tmpObj = Instantiate(prefabs/*, pos, Quaternion.identity*/) as GameObject;
-                        tmpObj.transform.position = new Vector3(position_x, position_y, position_z);
-                        tmpObj.transform.forward = new Vector3(forward_x, 0f, forward_z);
-                        tmpObj.GetComponent<Rigidbody>().velocity = new Vector3(velocity_x, velocity_y, velocity_z);
-                        tmpObj.GetComponent<movement>().setup(item.id, item.nickname);
-                        Players.Add(item.id, tmpObj);
-                        //GameObject roleInstance = Instantiate(GameObject.Find("role"), new Vector3(item.position_x, item.position_y, item.position_z), Quaternion.Euler(0f, 0f, 0f));
-                        //roleInstance.transform.LookAt(roleInstance.transform.position + new Vector3(item.forward_x, 0, item.forward_z));
-                        //roleInstance.GetComponent<movement>().setup(item.id, item.nickname);
-                    }
-                    //GameObject.Find(item.id).GetComponent<Rigidbody>().MovePosition(new Vector3(item.position_x, item.position_y, item.position_z));
-                    //GameObject.Find(item.id).transform.LookAt(GameObject.Find(item.id).transform.position + new Vector3(item.forward_x, 0, item.forward_z));
                 }
-                foreach (GameObject Player in GameObject.FindGameObjectsWithTag("Player"))//删除掉可视距离之外的玩家
+                else//此时未加载周围玩家
                 {
-                    if (!Players.Contains(Player.name) && Player.name != "role") 
+                    int i = 0;
+                    foreach (GameObject Player in Players)
                     {
-                        //Debug.Log("破坏");
-                        //Debug.Log(Player.name);
-                        Destroy(Player);
+                        Callback_SocketModel item = obj.socketmodel[i];
+                        int roomno = (int)(item.r >> 30);
+                        float position_x = ((float)(item.p >> 16)) / 32 - 1024 + GM.GetComponent<GameManagement>().SpawnPosition[roomno - 1].x;
+                        float position_y = ((float)((item.p << 16) >> 16)) / 32 - 1024 + GM.GetComponent<GameManagement>().SpawnPosition[roomno - 1].y;
+                        float position_z = ((float)((item.r << 2) >> 16)) / 32 - 1024 + GM.GetComponent<GameManagement>().SpawnPosition[roomno - 1].z;
+                        float velocity_x = ((float)(item.v >> 20)) / 8 - 64;
+                        float velocity_y = ((float)((item.v << 12) >> 22)) / 8 - 64;
+                        float velocity_z = ((float)((item.v << 22) >> 22)) / 8 - 64; ;
+                        float forward_x = ((float)((item.r << 18) >> 25)) / 64 - 1;
+                        float forward_z = ((float)((item.r << 25) >> 25)) / 64 - 1;
+                        Player.GetComponent<Rigidbody>().MovePosition(new Vector3(position_x, position_y, position_z));
+                        Player.transform.forward = new Vector3(forward_x, 0f, forward_z);
+                        Player.transform.position = new Vector3(position_x, position_y, position_z);
+                        i++;
                     }
                 }
-                Players.Clear();
             }
             else
             {
