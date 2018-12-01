@@ -7,6 +7,7 @@ public class ChatControl : MonoBehaviour {
 
     [HideInInspector] public bool m_ChatControl;
     [HideInInspector] public Transform m_Targets;
+    [HideInInspector] public bool accept_pillow = true;
 
     private GameObject chattext;
     private GameObject chatitem;
@@ -147,20 +148,22 @@ public class ChatControl : MonoBehaviour {
                         }
                         break;
                     case 4://悄悄话接收
-                        
-                        if (id == GameObject.Find("GameManagement").GetComponent<GameManagement>().id)
+                        if (accept_pillow)
                         {
-                            GameObject.Find("Channel1").GetComponent<Text>().text += ("\n" + "from<<<" + nickname + "：" + content);
-                            GameObject.Find("Channel2").GetComponent<Text>().text += ("\n" + "from<<<" + nickname + "：" + content);
-                            GameObject.Find("Channel3").GetComponent<Text>().text += ("\n" + "from<<<" + nickname + "：" + content);
-                            GameObject.Find("Channel0").GetComponent<Text>().text += ("\n" + "from<<<" + nickname + "：" + content);
-                        }
-                        else
-                        {
-                            GameObject.Find("Channel1").GetComponent<Text>().text += ("\n" + "to>>>" + nickname + "：" + content);
-                            GameObject.Find("Channel2").GetComponent<Text>().text += ("\n" + "to>>>" + nickname + "：" + content);
-                            GameObject.Find("Channel3").GetComponent<Text>().text += ("\n" + "to>>>" + nickname + "：" + content);
-                            GameObject.Find("Channel0").GetComponent<Text>().text += ("\n" + "to>>>" + nickname + "：" + content);
+                            if (id == GameObject.Find("GameManagement").GetComponent<GameManagement>().id)
+                            {
+                                GameObject.Find("Channel1").GetComponent<Text>().text += ("\n" + "from<<<" + nickname + "：" + content);
+                                GameObject.Find("Channel2").GetComponent<Text>().text += ("\n" + "from<<<" + nickname + "：" + content);
+                                GameObject.Find("Channel3").GetComponent<Text>().text += ("\n" + "from<<<" + nickname + "：" + content);
+                                GameObject.Find("Channel0").GetComponent<Text>().text += ("\n" + "from<<<" + nickname + "：" + content);
+                            }
+                            else
+                            {
+                                GameObject.Find("Channel1").GetComponent<Text>().text += ("\n" + "to>>>" + nickname + "：" + content);
+                                GameObject.Find("Channel2").GetComponent<Text>().text += ("\n" + "to>>>" + nickname + "：" + content);
+                                GameObject.Find("Channel3").GetComponent<Text>().text += ("\n" + "to>>>" + nickname + "：" + content);
+                                GameObject.Find("Channel0").GetComponent<Text>().text += ("\n" + "to>>>" + nickname + "：" + content);
+                            }
                         }
                         break;
                     default:

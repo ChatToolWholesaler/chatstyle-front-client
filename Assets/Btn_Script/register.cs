@@ -19,6 +19,8 @@ public class register : MonoBehaviour
 
         string nickname = GameObject.Find("Register UI/nickname").GetComponent<InputField>().text;
 
+        bool gender = (GameObject.Find("Register UI/gender").GetComponent<Dropdown>().value == 0 ? true : false);
+
         //向后台发送数据
 
         if (!IsNumeric(username))
