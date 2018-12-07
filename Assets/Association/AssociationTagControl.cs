@@ -8,18 +8,22 @@ public class AssociationTagControl : MonoBehaviour {
     GameObject friendtag;
     GameObject blacktag;
     GameObject requesttag;
+    GameObject informationtag;
     GameObject friend;
     GameObject black;
     GameObject request;
+    GameObject information;
 
     void Start()
     {
         friendtag = GameObject.Find("FriendTag");
         blacktag = GameObject.Find("BlackTag");
         requesttag = GameObject.Find("RequestTag");
+        informationtag = GameObject.Find("InformationTag");
         friend = GameObject.Find("Friend");
         black = GameObject.Find("Black");
         request = GameObject.Find("Request");
+        information = GameObject.Find("Information");
     }
     public void show(GameObject obj)
     {
@@ -47,6 +51,8 @@ public class AssociationTagControl : MonoBehaviour {
                     blacktag.GetComponent<Toggle>().interactable = true;
                     requesttag.GetComponent<Toggle>().isOn = false;
                     requesttag.GetComponent<Toggle>().interactable = true;
+                    informationtag.GetComponent<Toggle>().isOn = false;
+                    informationtag.GetComponent<Toggle>().interactable = true;
                     break;
                 case "BlackTag":
                     change(1);
@@ -54,6 +60,8 @@ public class AssociationTagControl : MonoBehaviour {
                     friendtag.GetComponent<Toggle>().interactable = true;
                     requesttag.GetComponent<Toggle>().isOn = false;
                     requesttag.GetComponent<Toggle>().interactable = true;
+                    informationtag.GetComponent<Toggle>().isOn = false;
+                    informationtag.GetComponent<Toggle>().interactable = true;
                     break;
                 case "RequestTag":
                     change(2);
@@ -61,6 +69,17 @@ public class AssociationTagControl : MonoBehaviour {
                     friendtag.GetComponent<Toggle>().interactable = true;
                     blacktag.GetComponent<Toggle>().isOn = false;
                     blacktag.GetComponent<Toggle>().interactable = true;
+                    informationtag.GetComponent<Toggle>().isOn = false;
+                    informationtag.GetComponent<Toggle>().interactable = true;
+                    break;
+                case "InformationTag":
+                    change(3);
+                    friendtag.GetComponent<Toggle>().isOn = false;
+                    friendtag.GetComponent<Toggle>().interactable = true;
+                    blacktag.GetComponent<Toggle>().isOn = false;
+                    blacktag.GetComponent<Toggle>().interactable = true;
+                    requesttag.GetComponent<Toggle>().isOn = false;
+                    requesttag.GetComponent<Toggle>().interactable = true;
                     break;
                 default:
                     break;
@@ -76,16 +95,25 @@ public class AssociationTagControl : MonoBehaviour {
                 show(friend);
                 hide(black);
                 hide(request);
+                hide(information);
                 break;
             case 1:
                 hide(friend);
                 show(black);
                 hide(request);
+                hide(information);
                 break;
             case 2:
                 hide(friend);
                 hide(black);
                 show(request);
+                hide(information);
+                break;
+            case 3:
+                hide(friend);
+                hide(black);
+                hide(request);
+                show(information);
                 break;
             default:
                 break;

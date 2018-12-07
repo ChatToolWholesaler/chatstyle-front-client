@@ -11,6 +11,9 @@ public class GameManagement : MonoBehaviour {
     public string id;
     public string nickname;
     public int RoomNo;
+    public string sign;
+    public bool gender;
+
     public float scdis;//可选中玩家的范围约束
     [HideInInspector] public Transform m_Targets;
     [HideInInspector] public GameObject con_obj=null;
@@ -160,11 +163,13 @@ public class GameManagement : MonoBehaviour {
         
     }
 
-    public void LoginOK(string username,string nickname)
+    public void LoginOK(string username,string nickname,string sign,bool gender)
     {
         GameObject.Find("Login UI").GetComponent<LoginControl>().Hide();
         id = username;
         this.nickname = nickname;
+        this.sign = sign;
+        this.gender = gender;
         GameObject.Find("Selectroom UI").GetComponent<SelectroomControl>().Show();
     }
 
@@ -197,6 +202,7 @@ public class GameManagement : MonoBehaviour {
         GameObject.Find("role").GetComponent<movement>().EnableMoveControl();
         GameObject.Find("role").GetComponent<movement>().setup("role", nickname);
         GameObject.Find("Chat UI").GetComponent<ChatControl>().HalfShow();
+        GameObject.Find("Runtime UI/Association_Call").GetComponent<AssociationControl>().setupinfo(gender, nickname, sign);
         //启动连接并第一次加载目前的其他玩家
         first_pull();
         con_obj = GameObject.Find("StateObject");
@@ -211,13 +217,12 @@ public class GameManagement : MonoBehaviour {
         StartCoroutine(GameObject.Find("StateObject").GetComponent<StateObject>().pull_player("http://yangyuqing.vipgz1.idcfengye.com/chat_room/pull.php", form));*/
         if (GameObject.Find("StateObject").GetComponent<StateObject>().begin_connect())
         {
+            Debug.Log(int.Parse(id));
             WWWForm form1 = new WWWForm();
             form1.AddField("roomno", RoomNo);
-            form1.AddField("username", id);
-            form1.AddField("nickname", nickname);
-            form1.AddField("channel", 2);
-            form1.AddField("content", nickname + "上线了");
-            StartCoroutine(GameObject.Find("StateObject").GetComponent<StateObject>().go_online("http://yangyuqing.vipgz1.idcfengye.com/chat_room/go_online.php", form1));
+            form1.AddField("userId",int.Parse(id));
+            form1.AddField("type", 1);
+            StartCoroutine(GameObject.Find("StateObject").GetComponent<StateObject>().go_online("http://localhost:3000/api/v1/user/setOnline", form1));
             GameObject.Find("StateObject").GetComponent<StateObject>().sendmsg(1, m_Targets.position.x, m_Targets.position.y, m_Targets.position.z, RoomNo, id, nickname, 2, nickname + "上线了");
         }
         else {

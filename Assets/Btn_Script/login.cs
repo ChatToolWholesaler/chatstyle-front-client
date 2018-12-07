@@ -12,7 +12,7 @@ public class login : MonoBehaviour {
         WWWForm form = new WWWForm();
         form.AddField("username", username);
         form.AddField("password", password);
-        StartCoroutine(GameObject.Find("StateObject").GetComponent<StateObject>().login("http://yangyuqing.vipgz1.idcfengye.com/chat_room/login.php", form));
+        StartCoroutine(GameObject.Find("StateObject").GetComponent<StateObject>().login("http://localhost:3000/api/v1/user/login", form));
         //GameObject.Find("GameManagement").GetComponent<GameManagement>().LoginOK("123", "卿");
         //向后台发送数据
     }

@@ -44,22 +44,22 @@ public class StateObject : MonoBehaviour {
         {
             Debug.Log(postData.text);
             LoginModel obj = JsonUtility.FromJson<LoginModel> (postData.text);
-            if (obj.result == 0)
+            if (obj.code == 200)
             {
-                GameObject.Find("HintMessage").GetComponent<hint>().Hint("登陆成功！");
-                GameObject.Find("GameManagement").GetComponent<GameManagement>().LoginOK(obj.username, obj.nickname);
+                GameObject.Find("HintMessage").GetComponent<hint>().Hint("登陆成功！ id:"+ obj.data.user_id);
+                GameObject.Find("GameManagement").GetComponent<GameManagement>().LoginOK(obj.data.user_id.ToString(), obj.data.nickname, obj.data.sign, obj.data.gender);
             }
-            else if (obj.result == 3)
+            else if (obj.code == 400)
             {
                 GameObject.Find("ErrorText").GetComponent<Text>().text = "该账号已登录";
             }
-            else if (obj.result == 1)
+            else if (obj.code == 403)
             {
                 GameObject.Find("ErrorText").GetComponent<Text>().text = "账号不存在或者密码不匹配";
             }
             else {
-                Debug.Log(obj.username);
-                Debug.Log(obj.nickname);
+                Debug.Log(obj.data.user_id);
+                Debug.Log(obj.data.nickname);
                 GameObject.Find("ErrorText").GetComponent<Text>().text = "登陆错误";
             }
         }
@@ -75,7 +75,7 @@ public class StateObject : MonoBehaviour {
         else
         {
             RegisterModel obj = JsonUtility.FromJson<RegisterModel>(postData.text);
-            if (obj.result == 0)
+            if (obj.code == 200)
             {
                 GameObject.Find("HintMessage").GetComponent<hint>().Hint("注册成功！");
                 GameObject.Find("Register UI").GetComponent<LoginControl>().Hide();
@@ -83,13 +83,13 @@ public class StateObject : MonoBehaviour {
             }
             else
             {
-                if (obj.result == 1)
+                if (obj.code == 403)
                 {
                     GameObject.Find("ErrorText_r").GetComponent<Text>().text = "账号或者密码已存在";
-                }
-                else if (obj.result == 3)
+                }//考虑昵称是否存在
+                else if (obj.code == 412)
                 {
-                    GameObject.Find("ErrorText_r").GetComponent<Text>().text = "昵称已存在";
+                    GameObject.Find("ErrorText_r").GetComponent<Text>().text = "查询错误";
                 }
                 else {
                     Debug.Log(obj);
@@ -110,14 +110,14 @@ public class StateObject : MonoBehaviour {
         }
         else
         {
-            RegisterModel obj = JsonUtility.FromJson<RegisterModel>(postData.text);
-            if (obj.result == 1)
+            GoOnlineModel obj = JsonUtility.FromJson<GoOnlineModel>(postData.text);
+            if (obj.code == 200)
             {
                 GameObject.Find("HintMessage").GetComponent<hint>().Hint("欢迎来到聊吧");
             }
             else
             {
-                if (obj.result == 0)
+                if (obj.code == 400)
                 {
                     GameObject.Find("HintMessage").GetComponent<hint>().Hint("连接服务器失败！");//插入数据库失败
                     GameObject.Find("quit room").GetComponent<Btn_Quitroom>().quitroom();
@@ -196,7 +196,7 @@ public class StateObject : MonoBehaviour {
             PullModel obj = JsonUtility.FromJson<PullModel>(data);
             if (obj.socketmodel.Length > 0)
             {
-                if (obj.socketmodel[0].id != null)//此时为周围玩家加载帧
+                if (obj.socketmodel[0].id != null&& obj.socketmodel[0].id != "")//此时为周围玩家加载帧
                 {
                     Players.Clear();
 
@@ -468,16 +468,35 @@ public class StateObject : MonoBehaviour {
 }
 
 [System.Serializable]
+public class LoginData
+{
+    public int user_id;
+    public string nickname;
+    public string sign;
+    public bool gender;
+    public string token;
+}
+[System.Serializable]
 public class LoginModel
 {
-    public int result;
-    public string username;
-    public string nickname;
+    public int code;
+    public LoginData data;
+}
+[System.Serializable]
+public class RegisterData
+{
+    public int user_id;
 }
 [System.Serializable]
 public class RegisterModel
 {
-    public int result;
+    public int code;
+    public RegisterData data;
+}
+[System.Serializable]
+public class GoOnlineModel
+{
+    public int code;
 }
 [System.Serializable]
 public class Callback_SocketModel

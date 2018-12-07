@@ -39,7 +39,8 @@ public class register : MonoBehaviour
         form.AddField("username", username);
         form.AddField("password", password);
         form.AddField("nickname", nickname);
-        StartCoroutine(GameObject.Find("StateObject").GetComponent<StateObject>().register("http://yangyuqing.vipgz1.idcfengye.com/chat_room/register.php", form));
+        form.AddField("gender", (gender ? 1 : 0));
+        StartCoroutine(GameObject.Find("StateObject").GetComponent<StateObject>().register("http://localhost:3000/api/v1/user/register", form));
 
     }
     public bool IsNumeric(string str)
