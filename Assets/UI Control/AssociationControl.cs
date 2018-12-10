@@ -21,8 +21,19 @@ public class AssociationControl : MonoBehaviour {
     public void setupinfo(bool gender, string nickname, string sign)
     {
         GameObject.Find("Runtime UI/Association_Call/ListBg/Information/sex/Text").GetComponent<Text>().text = (gender ? "♂" : "♀");
-        GameObject.Find("Runtime UI/Association_Call/ListBg/Information/nickname").GetComponent<Text>().text = nickname;
-        GameObject.Find("Runtime UI/Association_Call/ListBg/Information/sign").GetComponent<InputField>().text = sign;
+        GameObject.Find("Runtime UI/Association_Call/ListBg/Information/name/nickname").GetComponent<Text>().text = nickname;
+        GameObject.Find("Runtime UI/Association_Call/ListBg/Information/sign/sign").GetComponent<InputField>().text = sign;
+    }
+    public void Trigger()
+    {
+        if (GetComponent<CanvasGroup>().interactable)
+        {
+            Hide();
+        }
+        else
+        {
+            Show();
+        }
     }
 
     // Use this for initialization
@@ -34,6 +45,9 @@ public class AssociationControl : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-
+        if (Input.GetButtonDown("e"))
+        {
+            Trigger();
+        }
     }
 }

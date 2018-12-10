@@ -24,7 +24,7 @@ public class ChatBox : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        popsetting = GameObject.Find("show_bubble");
+        popsetting = GameObject.Find("Runtime UI/Setting_Call/show_bubble");
         GetComponentInChildren<CanvasGroup>().alpha = 0;
         GetComponentInChildren<CanvasGroup>().interactable = false;
         GetComponentInChildren<CanvasGroup>().blocksRaycasts = false;

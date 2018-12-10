@@ -132,6 +132,99 @@ public class StateObject : MonoBehaviour {
         }
     }
 
+    public IEnumerator set_sign(string _url, WWWForm _wForm)
+    {
+        WWW postData = new WWW(_url, _wForm);
+        yield return postData;
+        if (postData.error != null)
+        {
+            Debug.Log(postData.error);
+        }
+        else
+        {
+            GoOnlineModel obj = JsonUtility.FromJson<GoOnlineModel>(postData.text);
+            if (obj.code == 200)
+            {
+                GameObject.Find("HintMessage").GetComponent<hint>().Hint("修改成功");
+            }
+            else
+            {
+                if (obj.code == 400)
+                {
+                    GameObject.Find("HintMessage").GetComponent<hint>().Hint("修改失败！");//修改签名失败
+                }
+                else
+                {
+                    Debug.Log(obj);
+                }
+            }
+
+            Debug.Log(postData.text);
+        }
+    }
+
+    public IEnumerator get_info(string _url, WWWForm _wForm)
+    {
+        WWW postData = new WWW(_url, _wForm);
+        yield return postData;
+        if (postData.error != null)
+        {
+            Debug.Log(postData.error);
+        }
+        else
+        {
+            UserInfoModel obj = JsonUtility.FromJson<UserInfoModel>(postData.text);
+            if (obj.code == 200)
+            {
+                GameObject.Find("Information UI").GetComponent<InformationControl>().Show(obj.data.nickname, obj.data.userid.ToString(), (obj.data.gender?"♂":"♀"), obj.data.sign);
+            }
+            else
+            {
+                if (obj.code == 404)
+                {
+                    GameObject.Find("HintMessage").GetComponent<hint>().Hint("查看信息失败！");//查看玩家失败
+                }
+                else
+                {
+                    Debug.Log(obj);
+                }
+            }
+
+            Debug.Log(postData.text);
+        }
+    }
+
+    public IEnumerator apply_pull(string _url, WWWForm _wForm)
+    {
+        WWW postData = new WWW(_url, _wForm);
+        yield return postData;
+        if (postData.error != null)
+        {
+            Debug.Log(postData.error);
+        }
+        else
+        {
+            GoOnlineModel obj = JsonUtility.FromJson<GoOnlineModel>(postData.text);
+            if (obj.code == 200)
+            {
+                GameObject.Find("HintMessage").GetComponent<hint>().Hint("操作成功！");
+            }
+            else
+            {
+                if (obj.code == 400)
+                {
+                    GameObject.Find("HintMessage").GetComponent<hint>().Hint("操作错误");//申请好友或者拉黑失败
+                }
+                else
+                {
+                    Debug.Log(obj);
+                }
+            }
+
+            Debug.Log(postData.text);
+        }
+    }
+
     /*public IEnumerator pull_player(string _url, WWWForm _wForm)
     {
         WWW postData = new WWW(_url, _wForm);
@@ -409,7 +502,7 @@ public class StateObject : MonoBehaviour {
                         GameObject.Find("Chat UI").GetComponent<ChatControl>().AddContent(item.type, item.position_x, item.position_y, item.position_z, item.roomno, item.username, item.nickname, item.channel, item.content);
                         continue;
                     }
-                    if (item.username == GameObject.Find("GameManagement").GetComponent<GameManagement>().id)//避免绘制自己
+                    if (item.username == GameObject.Find("GameManagement").GetComponent<GameManagement>().id)//避免显示自己的上下线消息
                     {
                         continue;
                     }
@@ -438,6 +531,7 @@ public class StateObject : MonoBehaviour {
         }
         catch(Exception e) {
             Debug.Log(e.Message);
+            Debug.Log(e.StackTrace);
             Debug.Log(data);
             return;
         }
@@ -497,6 +591,20 @@ public class RegisterModel
 public class GoOnlineModel
 {
     public int code;
+}
+[System.Serializable]
+public class UserInfoData
+{
+    public string nickname;
+    public int userid;
+    public bool gender;
+    public string sign;
+}
+[System.Serializable]
+public class UserInfoModel
+{
+    public int code;
+    public UserInfoData data;
 }
 [System.Serializable]
 public class Callback_SocketModel

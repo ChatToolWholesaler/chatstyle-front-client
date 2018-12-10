@@ -28,6 +28,7 @@ public class GameManagement : MonoBehaviour {
     private GameObject settings;
     private GameObject association;
     private GameObject information;
+    private GameObject interaction;
     private RaycastHit hit;
     private string q = "q";
     // Use this for initialization
@@ -43,6 +44,7 @@ public class GameManagement : MonoBehaviour {
         settings = GameObject.Find("Setting_Call");
         association = GameObject.Find("Association_Call");
         information = GameObject.Find("Information UI");
+        interaction = GameObject.Find("Runtime UI/Interaction UI");
         sight = GameObject.Find("Sight_bead_UI");
         sight.GetComponent<Sightcontrol>().SetSight(0);
         GameObject.Find("Login UI").GetComponent<LoginControl>().Show();
@@ -69,8 +71,8 @@ public class GameManagement : MonoBehaviour {
                 {
                     Cursor.lockState = CursorLockMode.None;
                     Cursor.visible = true;
-                    maincamera.GetComponent<CameraControl>().DisableAngleControl();
-                    role.GetComponent<movement>().DisableTurnControl();
+                    maincamera.GetComponent<CameraControl>().DisableAngleControl();//禁止纵向视角转动
+                    role.GetComponent<movement>().DisableTurnControl();//禁止横向视角转动
                 }
                 else
                 {
@@ -96,8 +98,19 @@ public class GameManagement : MonoBehaviour {
                         {
                             sight.GetComponent<Sightcontrol>().SetSight(1);
                         }
-                        Cursor.SetCursor(cursorTexture_green, Vector2.zero, CursorMode.Auto);//设置鼠标样式//恢复默认样式;
+                        Cursor.SetCursor(cursorTexture_green, new Vector2(cursorTexture_green.width/2, cursorTexture_green.height/2), CursorMode.Auto);//设置鼠标样式//恢复默认样式;
                         //显示交互选项UI,并将选中玩家id传入方便交互,考虑做玩家信息UI，当玩家远离的时候自动关闭交互UI
+                        if (Input.GetMouseButtonDown(0))//记得当鼠标接近边界时避免交互UI超出屏幕
+                        {
+                            interaction.GetComponent<InteractionControl>().Show(hit.collider.GetComponent<movement>().nickname, hit.collider.GetComponent<movement>().id, Input.mousePosition);
+                            if (Cursor.lockState == CursorLockMode.Locked)
+                            {
+                                Cursor.lockState = CursorLockMode.None;
+                                Cursor.visible = true;
+                                maincamera.GetComponent<CameraControl>().DisableAngleControl();
+                                role.GetComponent<movement>().DisableTurnControl();
+                            }
+                        }
 
                     }
                     else
