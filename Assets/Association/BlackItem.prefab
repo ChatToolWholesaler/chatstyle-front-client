@@ -57,6 +57,7 @@ GameObject:
   - component: {fileID: 222013237713028964}
   - component: {fileID: 114693987407791364}
   - component: {fileID: 114374375500285314}
+  - component: {fileID: 114959588094762816}
   m_Layer: 5
   m_Name: CancelBlack
   m_TagString: Untagged
@@ -226,7 +227,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 114693987407791364}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114959588094762816}
+        m_MethodName: removeblack
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &114577629789405900
@@ -331,6 +343,17 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114959588094762816
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1770493149559930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eaea7b1a43f4b14bac2499adaa4d185, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!222 &222013237713028964
 CanvasRenderer:
   m_ObjectHideFlags: 1

@@ -19,6 +19,9 @@ public class StateObject : MonoBehaviour {
     public ClientSocket pos_Socket;
     public ClientSocket msg_Socket;
     public GameObject prefabs = null;
+    public GameObject friendprefabs = null;
+    public GameObject blackprefabs = null;
+    public GameObject requestprefabs = null;
     public GameObject GM;
     //public Hashtable Players;//存储当前附近的玩家
     public List<GameObject> Players;
@@ -114,6 +117,23 @@ public class StateObject : MonoBehaviour {
             if (obj.code == 200)
             {
                 GameObject.Find("HintMessage").GetComponent<hint>().Hint("欢迎来到聊吧");
+                //GameObject tmpObj = Instantiate(friendprefabs/*, pos, Quaternion.identity*/) as GameObject;
+                //GameObject friendlist = GameObject.Find("Runtime UI/Association_Call/ListBg/Friend/FriendList");
+                //tmpObj.transform.parent = friendlist.transform;
+                //tmpObj.transform.localScale = new Vector3(1.0f,1.0f,1.0f);
+                //tmpObj.GetComponent<FriendItemControl>().setup("卿","1","♂","千里之行 ，始于足下");//添加获取社交列表的请求
+                WWWForm form0 = new WWWForm();
+                form0.AddField("userId", int.Parse(GM.GetComponent<GameManagement>().id));
+                form0.AddField("type", 0);
+                StartCoroutine(acquire("http://localhost:3000/api/v1/friend/getFriendsList", form0, 0));
+                WWWForm form1 = new WWWForm();
+                form1.AddField("userId", int.Parse(GM.GetComponent<GameManagement>().id));
+                form1.AddField("type", 1);
+                StartCoroutine(acquire("http://localhost:3000/api/v1/friend/getFriendsList", form1, 1));
+                WWWForm form2 = new WWWForm();
+                form2.AddField("userId", int.Parse(GM.GetComponent<GameManagement>().id));
+                form2.AddField("type", 2);
+                StartCoroutine(acquire("http://localhost:3000/api/v1/friend/getFriendsList", form2, 2));
             }
             else
             {
@@ -121,6 +141,94 @@ public class StateObject : MonoBehaviour {
                 {
                     GameObject.Find("HintMessage").GetComponent<hint>().Hint("连接服务器失败！");//插入数据库失败
                     GameObject.Find("quit room").GetComponent<Btn_Quitroom>().quitroom();
+                }
+                else
+                {
+                    Debug.Log(obj);
+                }
+            }
+
+            Debug.Log(postData.text);
+        }
+    }
+
+    public IEnumerator acquire(string _url, WWWForm _wForm, int type)
+    {
+        WWW postData = new WWW(_url, _wForm);
+        yield return postData;
+        if (postData.error != null)
+        {
+            Debug.Log(postData.error);
+        }
+        else
+        {
+            FriendListModel obj = JsonUtility.FromJson<FriendListModel>(postData.text);
+            GameObject list = null;
+            GameObject item = null;
+            switch (type)
+            {
+                case 0:
+                    list = GameObject.Find("Runtime UI/Association_Call/ListBg/Friend/FriendList");
+                    item = friendprefabs;
+                    break;
+                case 1:
+                    list = GameObject.Find("Runtime UI/Association_Call/ListBg/Black/BlackList");
+                    item = blackprefabs;
+                    break;
+                case 2:
+                    list = GameObject.Find("Runtime UI/Association_Call/ListBg/Request/RequestList");
+                    item = requestprefabs;
+                    break;
+                default:
+                    break;
+            }
+            foreach (Transform child in list.transform)//添加项前先清空列表
+            {
+                Destroy(child.gameObject);
+            }
+            if (obj.code == 200)
+            {
+                foreach (FriendListData list_item in obj.data)
+                {
+                    GameObject tmpObj = Instantiate(item/*, pos, Quaternion.identity*/) as GameObject;
+                    tmpObj.transform.parent = list.transform;
+                    tmpObj.transform.localScale = new Vector3(1.0f,1.0f,1.0f);
+                    switch (type)
+                    {
+                        case 0:
+                            tmpObj.GetComponent<FriendItemControl>().setup(list_item.nickname, list_item.friendId.ToString(), (list_item.gender ? "♂" : "♀"), list_item.sign);
+                            break;
+                        case 1:
+                            tmpObj.GetComponent<BlackItemControl>().setup(list_item.nickname, list_item.friendId.ToString(), (list_item.gender ? "♂" : "♀"), list_item.sign);
+                            break;
+                        case 2:
+                            tmpObj.GetComponent<RequestItemControl>().setup(list_item.nickname, list_item.friendId.ToString(), (list_item.gender ? "♂" : "♀"), list_item.sign);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                if (obj.code == 400)
+                {
+                    switch (type)
+                    {
+                        case 0:
+                            GameObject.Find("HintMessage").GetComponent<hint>().Hint("获取好友列表失败！");
+                            break;
+                        case 1:
+                            GameObject.Find("HintMessage").GetComponent<hint>().Hint("获取黑名单列表失败！");
+                            //Debug.Log(postData.text);
+                            break;
+                        case 2:
+                            GameObject.Find("HintMessage").GetComponent<hint>().Hint("获取好友请求列表失败！");
+                            break;
+                        default:
+                            break;
+                    }
+                    
                 }
                 else
                 {
@@ -208,6 +316,18 @@ public class StateObject : MonoBehaviour {
             if (obj.code == 200)
             {
                 GameObject.Find("HintMessage").GetComponent<hint>().Hint("操作成功！");
+                WWWForm form0 = new WWWForm();
+                form0.AddField("userId", int.Parse(GM.GetComponent<GameManagement>().id));
+                form0.AddField("type", 0);
+                StartCoroutine(acquire("http://localhost:3000/api/v1/friend/getFriendsList", form0, 0));
+                WWWForm form1 = new WWWForm();
+                form1.AddField("userId", int.Parse(GM.GetComponent<GameManagement>().id));
+                form1.AddField("type", 1);
+                StartCoroutine(acquire("http://localhost:3000/api/v1/friend/getFriendsList", form1, 1));
+                WWWForm form2 = new WWWForm();
+                form2.AddField("userId", int.Parse(GM.GetComponent<GameManagement>().id));
+                form2.AddField("type", 2);
+                StartCoroutine(acquire("http://localhost:3000/api/v1/friend/getFriendsList", form2, 2));
             }
             else
             {
@@ -605,6 +725,20 @@ public class UserInfoModel
 {
     public int code;
     public UserInfoData data;
+}
+[System.Serializable]
+public class FriendListData
+{
+    public string nickname;
+    public int friendId;
+    public bool gender;
+    public string sign;
+}
+[System.Serializable]
+public class FriendListModel
+{
+    public int code;
+    public FriendListData[] data;
 }
 [System.Serializable]
 public class Callback_SocketModel

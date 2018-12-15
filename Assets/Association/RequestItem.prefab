@@ -74,6 +74,7 @@ GameObject:
   - component: {fileID: 222866948444106988}
   - component: {fileID: 114865594777641820}
   - component: {fileID: 114082833866399010}
+  - component: {fileID: 114080259218446340}
   m_Layer: 5
   m_Name: Reject
   m_TagString: Untagged
@@ -109,6 +110,7 @@ GameObject:
   - component: {fileID: 222131521966378872}
   - component: {fileID: 114461780221700764}
   - component: {fileID: 114473804220405632}
+  - component: {fileID: 114097857722760254}
   m_Layer: 5
   m_Name: Accept
   m_TagString: Untagged
@@ -131,6 +133,17 @@ MonoBehaviour:
   id: 1234
   sex: "\u2642"
   sign: "\u5343\u91CC\u4E4B\u884C\uFF0C\u59CB\u4E8E\u8DB3\u4E0B\u3002"
+--- !u!114 &114080259218446340
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1486992151491290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b90af48722d647b45b1ae8c1d75c5655, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114082833866399010
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -169,9 +182,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 114865594777641820}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114080259218446340}
+        m_MethodName: rejectrequest
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114097857722760254
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1959205939876308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b90af48722d647b45b1ae8c1d75c5655, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114151180495079346
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -376,7 +411,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 114461780221700764}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114097857722760254}
+        m_MethodName: acceptrequest
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &114519315779351884
