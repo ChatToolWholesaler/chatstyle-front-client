@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
-public class LoadTexture : MonoBehaviour {
+public class LoadTextureForPaint : MonoBehaviour {
 
+    const int albedoWidth = 512;
+    const int albedoHeight = 512;
     // Use this for initialization
     void Awake()
     {
@@ -21,7 +23,7 @@ public class LoadTexture : MonoBehaviour {
         fileStream.Dispose();
         fileStream = null;
         //创建Texture
-        Texture2D texture = new Texture2D(512, 512);
+        Texture2D texture = new Texture2D(albedoWidth, albedoHeight);
         texture.LoadImage(bytes);
 
         //更新材质

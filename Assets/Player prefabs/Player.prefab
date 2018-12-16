@@ -38,9 +38,10 @@ GameObject:
   - component: {fileID: 4255579093841686}
   - component: {fileID: 33691585098566812}
   - component: {fileID: 23374388035737912}
-  - component: {fileID: 135701567795622908}
+  - component: {fileID: 135993149403079814}
   - component: {fileID: 54554467016150330}
   - component: {fileID: 114546333874680950}
+  - component: {fileID: 114767965004796070}
   m_Layer: 1
   m_Name: Player
   m_TagString: Player
@@ -343,7 +344,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 0d686868735422445a0ffea39c5464c9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -376,7 +377,7 @@ MeshFilter:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1320240177883058}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 4300000, guid: affdb3ace44591042a1a9b7084a6bb9d, type: 3}
 --- !u!54 &54554467016150330
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -794,6 +795,18 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &114767965004796070
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1320240177883058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6e722434eded004bb1c3981f1cc4dd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TurnControl: 0
 --- !u!114 &114803411648972022
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -818,7 +831,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9823b1d75f896d449fdb8837064b03a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!135 &135701567795622908
+--- !u!135 &135993149403079814
 SphereCollider:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1047,7 +1060,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 30}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224693440275256740
 RectTransform:
