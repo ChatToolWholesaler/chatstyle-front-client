@@ -50,8 +50,8 @@ public class LoadPlayerTexture : MonoBehaviour {
         }
         else
         {
-            int inUseOffitialPresetIndex = 0;//【】
-            switch (inUseOffitialPresetIndex)
+            int inUseOfficialPresetIndex = 0;//【】
+            switch (inUseOfficialPresetIndex)
             {
                 case 0:
                     //更新材质

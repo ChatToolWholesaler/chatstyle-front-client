@@ -4319,6 +4319,18 @@ MonoBehaviour:
   albedoBlank: {fileID: 2800000, guid: 79eca95232a5c09439fd0e9760f1158e, type: 3}
   thumbnailBlank: {fileID: 2800000, guid: d8708870dda313848a5b5ca39321672b, type: 3}
   snapshooter: {fileID: 1512161261}
+  officialPreset0: {fileID: 2800000, guid: 73b81c75ddedf99439c0f8f867c5ce29, type: 3}
+  officialPreset1: {fileID: 2800000, guid: 5cc27a235ec57924f8258011aceeac09, type: 3}
+  officialPreset2: {fileID: 2800000, guid: 7ea66b32f1afe5248b820e784506ecd5, type: 3}
+  officialPreset3: {fileID: 2800000, guid: 06c3f757b24c902479f95285acceb1f4, type: 3}
+  officialPresetThumbnail0: {fileID: 2800000, guid: f2370439b5f16c0499c1da992c8ab96c,
+    type: 3}
+  officialPresetThumbnail1: {fileID: 2800000, guid: 51960a9b3eef0a046adc296e6ff5db17,
+    type: 3}
+  officialPresetThumbnail2: {fileID: 2800000, guid: e6dd7182854a10b489473735747e3628,
+    type: 3}
+  officialPresetThumbnail3: {fileID: 2800000, guid: db603aa08650e694ca72539db156b5cd,
+    type: 3}
 --- !u!4 &1208186294
 Transform:
   m_ObjectHideFlags: 0
@@ -4845,7 +4857,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 966329815}
   m_HandleRect: {fileID: 966329814}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -5758,7 +5770,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000026299529}
+  m_AnchoredPosition: {x: 0, y: 0.000076534554}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1746282708

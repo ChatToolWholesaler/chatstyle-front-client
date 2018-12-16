@@ -8,6 +8,18 @@ MonoImporter:
   - albedoBlank: {fileID: 2800000, guid: 79eca95232a5c09439fd0e9760f1158e, type: 3}
   - thumbnailBlank: {fileID: 2800000, guid: d8708870dda313848a5b5ca39321672b, type: 3}
   - snapshooter: {instanceID: 0}
+  - officialPreset0: {fileID: 2800000, guid: 73b81c75ddedf99439c0f8f867c5ce29, type: 3}
+  - officialPreset1: {fileID: 2800000, guid: 5cc27a235ec57924f8258011aceeac09, type: 3}
+  - officialPreset2: {fileID: 2800000, guid: 7ea66b32f1afe5248b820e784506ecd5, type: 3}
+  - officialPreset3: {fileID: 2800000, guid: 06c3f757b24c902479f95285acceb1f4, type: 3}
+  - officialPresetThumbnail0: {fileID: 2800000, guid: f2370439b5f16c0499c1da992c8ab96c,
+      type: 3}
+  - officialPresetThumbnail1: {fileID: 2800000, guid: 51960a9b3eef0a046adc296e6ff5db17,
+      type: 3}
+  - officialPresetThumbnail2: {fileID: 2800000, guid: e6dd7182854a10b489473735747e3628,
+      type: 3}
+  - officialPresetThumbnail3: {fileID: 2800000, guid: db603aa08650e694ca72539db156b5cd,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

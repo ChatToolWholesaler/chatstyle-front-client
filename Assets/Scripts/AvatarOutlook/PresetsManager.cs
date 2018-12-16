@@ -10,7 +10,7 @@ using System;
 //单例脚本
 public class PresetsManager : MonoBehaviour {
     
-    int presetNumber;
+    int presetsCount;
     public static string rootPath;
     public static int currentPresetIndex = 0;//代表界面中当前选中的预设，被编辑的也是它。初始值被置为0。模块内切换场景不改变它的值
     public static bool needToRefreshPreset = false;
@@ -26,6 +26,9 @@ public class PresetsManager : MonoBehaviour {
     GameObject headerInput, bodyInput;
     int thumbnailWidth, thumbnailHeight;
     //int albedoWidth, albedoHeight;
+    public Texture2D officialPreset0, officialPreset1, officialPreset2, officialPreset3;
+    public Texture2D officialPresetThumbnail0, officialPresetThumbnail1, officialPresetThumbnail2, officialPresetThumbnail3;
+    GameObject deleteButton, paintButton;
 
     //单例
     private PresetsManager() { }
@@ -57,9 +60,10 @@ public class PresetsManager : MonoBehaviour {
         rootPath = Application.persistentDataPath + "/Presets";
         DirectoryInfo dirinfo = new DirectoryInfo(rootPath);
         if (!dirinfo.Exists) { Directory.CreateDirectory(rootPath); }
-        presetNumber = dirinfo.GetDirectories().Length;//依据本地存储的预设文件夹数量确定预设总数
+        presetsCount = dirinfo.GetDirectories().Length;//依据本地存储的预设文件夹数量确定预设总数
         //PlayerPrefs.SetInt("inUsePresetIndex", 0)：用户当前使用/向外界展示的预设，只有第一次进入时0个预设，或选中预设后点击“保存”会改变它的值
         if (!PlayerPrefs.HasKey("inUsePresetIndex")) { PlayerPrefs.SetInt("inUsePresetIndex", 0); }//默认使用的外观为第一个，哪怕列表是空的没有第一个，稍后会创建
+        if (!PlayerPrefs.HasKey("inUseOfficialPresetIndex")) { PlayerPrefs.SetInt("inUseOfficialPresetIndex", 0); }//默认使用的对外官方外观为第一个
         if (currentPresetIndex == -1)
         {
             currentPresetIndex = PlayerPrefs.GetInt("inUsePresetIndex");
@@ -83,6 +87,8 @@ public class PresetsManager : MonoBehaviour {
         bodyInput.GetComponent<InputField>().onEndEdit.AddListener(delegate { EndBodyInputEdit(); });
         headerInput.SetActive(false);
         bodyInput.SetActive(false);
+        deleteButton = GameObject.Find("Button_delete");
+        paintButton = GameObject.Find("Button_paint");
 
         snapshooter.gameObject.SetActive(false);
 
@@ -91,7 +97,7 @@ public class PresetsManager : MonoBehaviour {
 
         presetButtons = new List<GameObject>();
 
-        for (int i = 0; i < presetNumber; i++)
+        for (int i = 0; i < presetsCount; i++)
         {
             string tempDirPath = rootPath + "/" + i.ToString();
             if (!Directory.Exists(tempDirPath)) { Directory.CreateDirectory(tempDirPath); }
@@ -125,9 +131,22 @@ public class PresetsManager : MonoBehaviour {
             string jsonstr = File.ReadAllText(tempDirPath + "/data.json");
             JsonData data = JsonMapper.ToObject(jsonstr);
             (presetButtons[i]).transform.GetChild(1).GetComponent<Text>().text = data["header"].ToString();
+
+
+            //当使用official官方皮肤时，禁用删除和编辑涂装的按钮
+            if (currentPresetIndex >= 0 && currentPresetIndex < 4)//0-3
+            {
+                deleteButton.GetComponent<Button>().interactable = false;
+                paintButton.GetComponent<Button>().interactable = false;
+            }
+            else
+            {
+                deleteButton.GetComponent<Button>().interactable = true;
+                paintButton.GetComponent<Button>().interactable = true;
+            }
         }
 
-        if (presetNumber == 0)
+        if (presetsCount == 0)
         {
             StartUp();
         }
@@ -190,8 +209,12 @@ public class PresetsManager : MonoBehaviour {
     //无需点击地增加一个预设，并设为in use预设。【只在预设数为0时被调用】
     void StartUp()
     {
-        AddPreset();
+        AddOfficialPresetAtIndex(0);
+        AddOfficialPresetAtIndex(1);
+        AddOfficialPresetAtIndex(2);
+        AddOfficialPresetAtIndex(3);
         PlayerPrefs.SetInt("inUsePresetIndex", 0);
+        PlayerPrefs.SetInt("inUseOfficialPresetIndex", 0);
     }
 
     public void ChangeCurrentPreset()
@@ -200,7 +223,7 @@ public class PresetsManager : MonoBehaviour {
         (presetButtons[currentPresetIndex]).transform.localScale = new Vector3(1, 1, 0);
 
         //更改currentPreset值
-        currentPresetIndex = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.transform.GetSiblingIndex() - 1;//-1因为不是从0开始的
+        currentPresetIndex = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.transform.GetSiblingIndex() - 1;//-1因为不是从0开始的，0是new(+)按钮
 
         ChangePresetRelatedUI();
     }
@@ -246,6 +269,18 @@ public class PresetsManager : MonoBehaviour {
 
         //更新current按钮大小，表示被选中
         (presetButtons[currentPresetIndex]).transform.localScale += new Vector3(0.1f, 0.1f, 0);
+
+        //当使用official官方皮肤时，禁用删除和编辑涂装的按钮
+        if (currentPresetIndex >= 0 && currentPresetIndex < 4)//0-3
+        {
+            deleteButton.GetComponent<Button>().interactable = false;
+            paintButton.GetComponent<Button>().interactable = false;
+        }
+        else
+        {
+            deleteButton.GetComponent<Button>().interactable = true;
+            paintButton.GetComponent<Button>().interactable = true;
+        }
     }
 
     public void DeletePreset()
@@ -255,8 +290,8 @@ public class PresetsManager : MonoBehaviour {
         //删除文件夹
         Directory.Delete(rootPath + "/" + currentPresetIndex, true);//此删法不会加入回收站
 
-        //改后面的文件夹的名字，presetNumber还没有-1，current此时仍表示被删的index
-        for (int i = currentPresetIndex+1; i < presetNumber; i++)
+        //改后面的文件夹的名字，presetCount还没有-1，current此时仍表示被删的index
+        for (int i = currentPresetIndex+1; i < presetsCount; i++)
         {
             Directory.Move(rootPath + "/" + i.ToString(), rootPath + "/" + (i - 1).ToString());
         }
@@ -266,10 +301,10 @@ public class PresetsManager : MonoBehaviour {
         presetButtons.RemoveAt(currentPresetIndex);//删除C#对象
 
         //改统计量
-        presetNumber -= 1;
+        presetsCount -= 1;
 
         //若现用预设正被删除，置新现用为第一个预设
-        if (PlayerPrefs.GetInt("inUsePresetIndex") == currentPresetIndex) { if (presetNumber < 1) { StartUp(); } else { PlayerPrefs.SetInt("inUsePresetIndex", 0); } }
+        if (PlayerPrefs.GetInt("inUsePresetIndex") == currentPresetIndex) { if (presetsCount < 1) { StartUp(); } else { PlayerPrefs.SetInt("inUsePresetIndex", 0); } }
         
         //改current为现用预设
         currentPresetIndex = PlayerPrefs.GetInt("inUsePresetIndex");
@@ -282,18 +317,18 @@ public class PresetsManager : MonoBehaviour {
         //增加预设不影响in use的预设
 
         //增加文件夹
-        string tempDirPath = rootPath + "/" + presetNumber;
+        string tempDirPath = rootPath + "/" + presetsCount;
         Directory.CreateDirectory(tempDirPath);
 
         //改ArrayList，减少变更，直接插入到最末尾
         presetButtons.Add(Instantiate(presetButtonPrefab));//实例化prefab
-        (presetButtons[presetNumber]).transform.SetParent(content.transform, false);//放入UIcanvas
+        (presetButtons[presetsCount]).transform.SetParent(content.transform, false);//放入UIcanvas
 
         //生成数据和文件
 
         //json内容
         string header = "未命名\n（点击进行命名）", body = "点击添加描述\n";
-        SaveJson(presetNumber, header, body);
+        SaveJson(presetsCount, header, body);
 
         //预览图内容
         //创建Sprite
@@ -305,17 +340,87 @@ public class PresetsManager : MonoBehaviour {
         SaveTexAsPng(tempDirPath + "/albedo.png", albedoBlank);
 
         //更新button的内容
-        (presetButtons[presetNumber]).transform.GetChild(0).GetComponent<Image>().sprite = sprite;
-        (presetButtons[presetNumber]).transform.GetChild(1).GetComponent<Text>().text = header;
+        (presetButtons[presetsCount]).transform.GetChild(0).GetComponent<Image>().sprite = sprite;
+        (presetButtons[presetsCount]).transform.GetChild(1).GetComponent<Text>().text = header;
 
         //取消上一个被选中的按钮放大效果
         (presetButtons[currentPresetIndex]).transform.localScale = new Vector3(1, 1, 0);
         //改current为新加预设
-        currentPresetIndex = presetNumber;
+        currentPresetIndex = presetsCount;
         ChangePresetRelatedUI();
 
         //改统计量
-        presetNumber += 1;
+        presetsCount += 1;
+    }
+
+    void AddOfficialPresetAtIndex(int officialIndex)
+    {
+        //增加预设不影响in use的预设
+
+        //增加文件夹
+        string tempDirPath = rootPath + "/" + officialIndex;
+        if (!(new DirectoryInfo(tempDirPath)).Exists)
+        {
+            Directory.CreateDirectory(tempDirPath);
+        }
+
+        //改ArrayList，减少变更，直接插入到最末尾
+        //理论上现在应该是空队列在加初始元素，加就完事了
+        presetButtons.Add(Instantiate(presetButtonPrefab));//实例化prefab
+        (presetButtons[officialIndex]).transform.SetParent(content.transform, false);//放入UIcanvas
+
+        //生成数据和文件
+        string header = "", body = "";
+        Texture2D thumbnail = default(Texture2D);
+        Texture2D albedo = default(Texture2D);
+        switch (officialIndex)
+        {
+            case 0:
+                header = ""; body = "";
+                thumbnail = officialPresetThumbnail0;
+                albedo = officialPreset0;
+                break;
+            case 1:
+                header = ""; body = "";
+                thumbnail = officialPresetThumbnail1;
+                albedo = officialPreset1;
+                break;
+            case 2:
+                header = ""; body = "";
+                thumbnail = officialPresetThumbnail2;
+                albedo = officialPreset2;
+                break;
+            case 3:
+                header = ""; body = "";
+                thumbnail = officialPresetThumbnail3;
+                albedo = officialPreset3;
+                break;
+        }
+
+        //json内容
+        SaveJson(officialIndex, header, body);
+
+        //预览图内容
+        //Sprite内容
+        Sprite sprite = Sprite.Create(thumbnail, new Rect(0, 0, thumbnail.width, thumbnail.height), new Vector2(0.5f, 0.5f));
+        //创建png
+        SaveTexAsPng(tempDirPath + "/thumbnail.png", thumbnail);
+
+        //纹理内容
+        SaveTexAsPng(tempDirPath + "/albedo.png", albedo);
+
+        //更新button的内容
+        (presetButtons[officialIndex]).transform.GetChild(0).GetComponent<Image>().sprite = sprite;
+        (presetButtons[officialIndex]).transform.GetChild(1).GetComponent<Text>().text = header;
+
+        //取消上一个被选中的按钮放大效果
+        (presetButtons[currentPresetIndex]).transform.localScale = new Vector3(1, 1, 0);
+        //改current为新加预设
+        currentPresetIndex = officialIndex;
+        ChangePresetRelatedUI();
+
+        //改统计量
+        presetsCount += 1;
     }
 
     void SaveTexAsPng(string path, Texture2D texture2D)

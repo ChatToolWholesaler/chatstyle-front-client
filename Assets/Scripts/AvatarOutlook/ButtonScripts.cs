@@ -23,14 +23,14 @@ public class ButtonScripts : MonoBehaviour {
     public void CancelChoiceOnClick()
     {
         StartCoroutine(ExitPresetsGallery());
-        PresetsManager.currentPresetIndex = -1;
+        //PresetsManager.currentPresetIndex = 0;
         print("cancel choose on avatar outlook and exit the avatar outlook edit module");
     }
     
     public void ConfirmChoiceOnClick()
     {
         PlayerPrefs.SetInt("inUsePresetIndex", PresetsManager.currentPresetIndex);
-        PresetsManager.currentPresetIndex = -1;
+        //PresetsManager.currentPresetIndex = 0;
         StartCoroutine(ExitPresetsGallery());
         print("save choice on avatar outlook (can be not changed) and exit the avatar outlook edit module");
     }
