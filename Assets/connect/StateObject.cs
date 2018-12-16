@@ -8,6 +8,7 @@ using System.Threading;
 using System.IO;
 using System;
 using Net;
+using UnityEngine.SceneManagement;
 
 
 
@@ -46,10 +47,10 @@ public class StateObject : MonoBehaviour {
         else
         {
             Debug.Log(postData.text);
-            LoginModel obj = JsonUtility.FromJson<LoginModel> (postData.text);
+            LoginModel obj = JsonUtility.FromJson<LoginModel>(postData.text);
             if (obj.code == 200)
             {
-                GameObject.Find("HintMessage").GetComponent<hint>().Hint("登陆成功！ id:"+ obj.data.user_id);
+                GameObject.Find("HintMessage").GetComponent<hint>().Hint("登陆成功！ id:" + obj.data.user_id);
                 GameObject.Find("GameManagement").GetComponent<GameManagement>().LoginOK(obj.data.user_id.ToString(), obj.data.nickname, obj.data.sign, obj.data.gender);
             }
             else if (obj.code == 400)
@@ -192,7 +193,7 @@ public class StateObject : MonoBehaviour {
                 {
                     GameObject tmpObj = Instantiate(item/*, pos, Quaternion.identity*/) as GameObject;
                     tmpObj.transform.parent = list.transform;
-                    tmpObj.transform.localScale = new Vector3(1.0f,1.0f,1.0f);
+                    tmpObj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
                     switch (type)
                     {
                         case 0:
@@ -228,7 +229,7 @@ public class StateObject : MonoBehaviour {
                         default:
                             break;
                     }
-                    
+
                 }
                 else
                 {
@@ -284,7 +285,7 @@ public class StateObject : MonoBehaviour {
             UserInfoModel obj = JsonUtility.FromJson<UserInfoModel>(postData.text);
             if (obj.code == 200)
             {
-                GameObject.Find("Information UI").GetComponent<InformationControl>().Show(obj.data.nickname, obj.data.userid.ToString(), (obj.data.gender?"♂":"♀"), obj.data.sign);
+                GameObject.Find("Information UI").GetComponent<InformationControl>().Show(obj.data.nickname, obj.data.userid.ToString(), (obj.data.gender ? "♂" : "♀"), obj.data.sign);
             }
             else
             {
@@ -361,7 +362,7 @@ public class StateObject : MonoBehaviour {
         }
     }*/
 
-    public void socket(string id,string nickname, float position_x, float position_y, float position_z, float velocity_x, float velocity_y, float velocity_z, float forward_x, float forward_z, int roomno)
+    public void socket(string id, string nickname, float position_x, float position_y, float position_z, float velocity_x, float velocity_y, float velocity_z, float forward_x, float forward_z, int roomno)
     {//记得定时请求一次周围人
         SocketModel obj = new SocketModel();
         obj.id = id;
@@ -375,15 +376,18 @@ public class StateObject : MonoBehaviour {
         obj.forward_x = forward_x;
         obj.forward_z = forward_z;
         obj.roomno = roomno;*/
-        position_x -= GM.GetComponent<GameManagement>().SpawnPosition[roomno-1].x;
-        position_y -= GM.GetComponent<GameManagement>().SpawnPosition[roomno-1].y;
-        position_z -= GM.GetComponent<GameManagement>().SpawnPosition[roomno-1].z;
-        obj.p = ((uint)((position_x + 1024) * 32) << 16)| ((uint)((position_y + 1024) * 32));
+        if (isinroom)
+        {
+            position_x -= GM.GetComponent<GameManagement>().SpawnPosition[roomno - 1].x;
+            position_y -= GM.GetComponent<GameManagement>().SpawnPosition[roomno - 1].y;
+            position_z -= GM.GetComponent<GameManagement>().SpawnPosition[roomno - 1].z;
+        }
+        obj.p = ((uint)((position_x + 1024) * 32) << 16) | ((uint)((position_y + 1024) * 32));
         obj.v = ((uint)((velocity_x + 64) * 8) << 20) | ((uint)((velocity_y + 64) * 8) << 10) | ((uint)((velocity_z + 64) * 8));
         obj.r = ((uint)(roomno) << 30) | ((uint)((position_z + 1024) * 32) << 14) | ((uint)((forward_x + 1) * 64) << 7) | ((uint)((forward_z + 1) * 64));
         string json = JsonUtility.ToJson(obj);
         //Debug.Log(json);
-        pos_Socket.AsyncSendData(json,1);
+        pos_Socket.AsyncSendData(json, 1);
         //AsyncCallback callback = new AsyncCallback(paint);
     }
 
@@ -404,12 +408,12 @@ public class StateObject : MonoBehaviour {
     {
         try
         {
-            
+
             //Debug.Log(data);
             PullModel obj = JsonUtility.FromJson<PullModel>(data);
             if (obj.socketmodel.Length > 0)
             {
-                if (obj.socketmodel[0].id != null&& obj.socketmodel[0].id != "")//此时为周围玩家加载帧
+                if (obj.socketmodel[0].id != null && obj.socketmodel[0].id != "")//此时为周围玩家加载帧
                 {
                     Players.Clear();
 
@@ -502,16 +506,19 @@ public class StateObject : MonoBehaviour {
             }
             else
             {
-                foreach (GameObject Player in GameObject.FindGameObjectsWithTag("Player"))
+                if (isinroom)//周围没人（必须排除编辑人物的情况）时删掉所有现存周围玩家
                 {
-                    if (Player.name != "role")
+                    foreach (GameObject Player in GameObject.FindGameObjectsWithTag("Player"))
                     {
-                        Destroy(Player);
+                        if (Player.name != "role")
+                        {
+                            Destroy(Player);
+                        }
                     }
                 }
             }
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             Debug.Log(e.Message);
             Debug.Log(e.StackTrace);
@@ -594,7 +601,7 @@ public class StateObject : MonoBehaviour {
         msgmodel.channel = channel;
         msgmodel.content = content;
         string json = JsonUtility.ToJson(msgmodel);
-        msg_Socket.AsyncSendData(json,3);
+        msg_Socket.AsyncSendData(json, 3);
         //Callback_MsgModel result = JsonUtility.FromJson<Callback_MsgModel>(res);
         //将消息显示在聊天框中
     }
@@ -646,10 +653,10 @@ public class StateObject : MonoBehaviour {
                     }
                 }
             }
-            
+
             //将消息显示在聊天框中
         }
-        catch(Exception e) {
+        catch (Exception e) {
             Debug.Log(e.Message);
             Debug.Log(e.StackTrace);
             Debug.Log(data);
@@ -670,7 +677,7 @@ public class StateObject : MonoBehaviour {
     public bool begin_connect()
     {
         //pos_Socket.ConnectServer(ip, pos_port);//消息系统与游戏系统使用不同的端口
-       // msg_Socket.ConnectServer(ip, msg_port);
+        // msg_Socket.ConnectServer(ip, msg_port);
         return (pos_Socket.ConnectServer(ip, pos_port) && msg_Socket.ConnectServer(ip, msg_port));
     }
     public void close_connect()
@@ -679,6 +686,92 @@ public class StateObject : MonoBehaviour {
         msg_Socket.CloseServer();
     }
 
+    public static StateObject instance;
+    public bool isinroom = true;
+    private int deltaframe = 0;//计帧数
+    public string id;
+    public string nickname;
+    public string sign;
+    public bool gender;
+    public int roomno;
+    public string roomname;
+    public Vector3 position;
+    public Vector3 forward;
+    public Vector3 velocity;
+
+    void Start()
+    {
+        //避免出现多个该物体
+        if (instance != null)
+        {
+            return;
+        }
+        else {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        SceneManager.sceneLoaded += (var, var2) =>
+        {
+            if (var.buildIndex == 0)
+            {
+                if (!isinroom)
+                {
+                    StartCoroutine(EnterPresetsGallery());
+                    
+                }
+                isinroom = true;
+            }
+            else
+            {
+                isinroom = false;
+            }
+        };
+    }
+    IEnumerator EnterPresetsGallery()
+    {
+        yield return new WaitForEndOfFrame();
+        GM = GameObject.Find("GameManagement");
+        GM.GetComponent<GameManagement>().LoginOK(id, nickname, sign, gender);
+        GM.GetComponent<GameManagement>().RoomNo = roomno;
+        GameObject.Find("Selectroom UI").GetComponent<SelectroomControl>().Hide();
+        GameObject.Find("RoomNo").GetComponent<Text>().text = roomname;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        GameObject.Find("role").transform.position = position;
+        GameObject.Find("role").transform.forward = forward;
+        GameObject.Find("role").GetComponent<Rigidbody>().velocity = velocity;
+        GameObject.Find("BGM").GetComponent<BGMControl>().LoadBGM(roomno - 1);
+        GameObject.Find("BGM").GetComponent<AudioSource>().Play();
+        GameObject.Find("Main Camera").GetComponent<Camera>().cullingMask = -1;
+        GameObject.Find("Main Camera").GetComponent<Camera>().cullingMask &= ~(1 << 10);//关闭圆点层
+        GameObject.Find("Manu").GetComponent<ManuControl>().EnableMouseMove();
+        GameObject.Find("Manu").GetComponent<ManuControl>().EnableManuControl();
+        GameObject.Find("Map").GetComponent<MapControl>().Show();
+        GameObject.Find("role").GetComponent<movement>().EnableMoveControl();
+        GameObject.Find("role").GetComponent<movement>().setup("role", nickname);
+        GameObject.Find("Chat UI").GetComponent<ChatControl>().HalfShow();
+        GameObject.Find("Runtime UI/Association_Call").GetComponent<AssociationControl>().setupinfo(gender, nickname, sign);
+        GM.GetComponent<GameManagement>().con_obj = GameObject.Find("StateObject");
+        KeepReceive();
+        //不要显示登录页面，直接进入房间
+    }
+    void Update()
+    {
+        
+        if (!isinroom)
+        {
+            deltaframe++;
+            if (deltaframe >= 10)
+            {
+                deltaframe = 0;
+                sendmsg(5, 0f, 0f, 0f, 1, null, null, 1, null);
+            }
+            if (deltaframe % 3 == 0)
+            {
+                socket(null, null, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0);
+            }
+        }
+    }
 }
 
 [System.Serializable]
