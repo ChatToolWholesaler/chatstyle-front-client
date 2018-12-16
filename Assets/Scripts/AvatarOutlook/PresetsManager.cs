@@ -376,22 +376,22 @@ public class PresetsManager : MonoBehaviour {
         switch (officialIndex)
         {
             case 0:
-                header = ""; body = "";
+                header = "企鹅"; body = "ChatStyle";
                 thumbnail = officialPresetThumbnail0;
                 albedo = officialPreset0;
                 break;
             case 1:
-                header = ""; body = "";
+                header = "Papyrus"; body = "《Undertale》";
                 thumbnail = officialPresetThumbnail1;
                 albedo = officialPreset1;
                 break;
             case 2:
-                header = ""; body = "";
+                header = "乔帮主"; body = "you know who";
                 thumbnail = officialPresetThumbnail2;
                 albedo = officialPreset2;
                 break;
             case 3:
-                header = ""; body = "";
+                header = "辐射"; body = "《FallOut4》";
                 thumbnail = officialPresetThumbnail3;
                 albedo = officialPreset3;
                 break;
