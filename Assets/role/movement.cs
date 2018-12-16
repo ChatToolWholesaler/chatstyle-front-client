@@ -146,7 +146,7 @@ public class movement : MonoBehaviour
     }
 
     // Update is called once per frame
-    private void Update()
+    void Update()
     {
         transform.LookAt(transform.position + new Vector3(transform.forward.x, 0f, transform.forward.z));
 
