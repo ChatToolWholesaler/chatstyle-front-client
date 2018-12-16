@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 135993149403079814}
   - component: {fileID: 54554467016150330}
   - component: {fileID: 114546333874680950}
-  - component: {fileID: 114767965004796070}
+  - component: {fileID: 114329696087252784}
   m_Layer: 1
   m_Name: Player
   m_TagString: Player
@@ -677,6 +677,23 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114329696087252784
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1320240177883058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6e722434eded004bb1c3981f1cc4dd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isControlledByUser: 0
+  defaultAlbedo: {fileID: 2800000, guid: 79eca95232a5c09439fd0e9760f1158e, type: 3}
+  officialPreset0: {fileID: 2800000, guid: 73b81c75ddedf99439c0f8f867c5ce29, type: 3}
+  officialPreset1: {fileID: 2800000, guid: 5cc27a235ec57924f8258011aceeac09, type: 3}
+  officialPreset2: {fileID: 2800000, guid: 7ea66b32f1afe5248b820e784506ecd5, type: 3}
+  officialPreset3: {fileID: 2800000, guid: 06c3f757b24c902479f95285acceb1f4, type: 3}
 --- !u!114 &114414482089467516
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -795,18 +812,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &114767965004796070
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1320240177883058}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6e722434eded004bb1c3981f1cc4dd3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TurnControl: 0
 --- !u!114 &114803411648972022
 MonoBehaviour:
   m_ObjectHideFlags: 1

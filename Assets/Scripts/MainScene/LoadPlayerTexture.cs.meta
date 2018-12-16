@@ -3,7 +3,12 @@ guid: e6e722434eded004bb1c3981f1cc4dd3
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - defaultAlbedo: {fileID: 2800000, guid: 79eca95232a5c09439fd0e9760f1158e, type: 3}
+  - officialPreset0: {fileID: 2800000, guid: 73b81c75ddedf99439c0f8f867c5ce29, type: 3}
+  - officialPreset1: {fileID: 2800000, guid: 5cc27a235ec57924f8258011aceeac09, type: 3}
+  - officialPreset2: {fileID: 2800000, guid: 7ea66b32f1afe5248b820e784506ecd5, type: 3}
+  - officialPreset3: {fileID: 2800000, guid: 06c3f757b24c902479f95285acceb1f4, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
