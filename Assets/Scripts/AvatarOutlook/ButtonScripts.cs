@@ -78,8 +78,8 @@ public class ButtonScripts : MonoBehaviour {
     /// </summary>
     public void GoToAvatarOutlookModuleOnClick()
     {
-        StartCoroutine(EnterPresetsGallery());
-        print("click: move to the avatar outlook edit module");
+        //StartCoroutine(EnterPresetsGallery());
+        //print("click: move to the avatar outlook edit module");
     }
 
 

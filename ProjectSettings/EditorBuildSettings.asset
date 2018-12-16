@@ -8,4 +8,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/AvatarOutlook/PresetsGallery.unity
+    guid: 9737297b9896d8d49bf343d32b4b77b6
+  - enabled: 1
+    path: Assets/Scenes/AvatarOutlook/Paint.unity
+    guid: f332bf6ce8fbd16429934e344ecc1e6f
   m_configObjects: {}

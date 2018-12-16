@@ -61,7 +61,7 @@ public class PaintManager : MonoBehaviour {
     private Texture2D canvas;
     private P3D_Painter painter;
     private Vector2 oldMousePosition;
-    public Texture2D cursor_brush;//画笔的预览，以鼠标样式的形式
+    //public Texture2D cursor_brush;//画笔的预览，以鼠标样式的形式
     private Text currentBrushMode;
     private Slider brushSize;
     private Slider brushSolid;
@@ -372,26 +372,5 @@ public class PaintManager : MonoBehaviour {
         var bytes = texture2D.EncodeToPNG();
         //var bytes = texture2D.EncodeToJPG();
         System.IO.File.WriteAllBytes(path, bytes);
-    }
-
-    void ScaleCursorBrush(int targetWidth,int targetHeight)
-    {
-        if (targetWidth == 0 || targetHeight == 0) { return; }
-        Texture2D temp = new Texture2D(cursor_brush.width, cursor_brush.height);
-        temp.SetPixels32(cursor_brush.GetPixels32());temp.Apply();
-
-        cursor_brush.Resize(targetWidth, targetHeight);
-        for (int i = 0; i < targetHeight; ++i)
-        {
-            for (int j = 0; j < targetWidth; ++j)
-            {
-                //Color newColor = temp.GetPixelBilinear((float)j / (float)targetWidth, (float)i / (float)targetHeight);
-                Color newColor = temp.GetPixel(j / targetWidth, i / targetHeight);
-                cursor_brush.SetPixel(j, i, newColor);
-            }
-        }
-
-        cursor_brush.Apply();
-        //Cursor.SetCursor(cursor_brush, new Vector2(cursor_brush.width / 2, cursor_brush.height / 2), CursorMode.Auto);
     }
 }
