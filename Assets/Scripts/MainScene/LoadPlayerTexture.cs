@@ -11,7 +11,27 @@ public class LoadPlayerTexture : MonoBehaviour {
     const int albedoHeight = 512;
     public Texture2D defaultAlbedo;
     public Texture2D officialPreset0, officialPreset1, officialPreset2, officialPreset3;
-    public int inUseOfficialPresetIndex;
+    public int inUseOfficialPresetIndex = -1;
+
+    void SetOfficialOutlook(int officialIndex)
+    {
+        //int inUseOfficialPresetIndex = 0;//【】
+        switch (officialIndex)
+        {
+            case 0:
+                //更新材质
+                GetComponent<MeshRenderer>().material.SetTexture("_MainTex", officialPreset0); break;
+            case 1:
+                //更新材质
+                GetComponent<MeshRenderer>().material.SetTexture("_MainTex", officialPreset1); break;
+            case 2:
+                //更新材质
+                GetComponent<MeshRenderer>().material.SetTexture("_MainTex", officialPreset2); break;
+            case 3:
+                //更新材质
+                GetComponent<MeshRenderer>().material.SetTexture("_MainTex", officialPreset3); break;
+        }
+    }
 
     void Start()
     {
@@ -51,21 +71,13 @@ public class LoadPlayerTexture : MonoBehaviour {
         }
         else
         {
-            //int inUseOfficialPresetIndex = 0;//【】
-            switch (inUseOfficialPresetIndex)
+            if (inUseOfficialPresetIndex == -1)
             {
-                case 0:
-                    //更新材质
-                    GetComponent<MeshRenderer>().material.SetTexture("_MainTex", officialPreset0); break;
-                case 1:
-                    //更新材质
-                    GetComponent<MeshRenderer>().material.SetTexture("_MainTex", officialPreset1); break;
-                case 2:
-                    //更新材质
-                    GetComponent<MeshRenderer>().material.SetTexture("_MainTex", officialPreset2); break;
-                case 3:
-                    //更新材质
-                    GetComponent<MeshRenderer>().material.SetTexture("_MainTex", officialPreset3); break;
+                SetOfficialOutlook(0);
+            }
+            else
+            {
+                SetOfficialOutlook(inUseOfficialPresetIndex);
             }
         }
     }
