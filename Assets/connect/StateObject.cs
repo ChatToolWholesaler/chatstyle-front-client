@@ -383,7 +383,7 @@ public class StateObject : MonoBehaviour {
             position_z -= GM.GetComponent<GameManagement>().SpawnPosition[roomno - 1].z;
         }
         obj.p = ((uint)((position_x + 1024) * 32) << 16) | ((uint)((position_y + 1024) * 32));
-        obj.v = ((uint)((velocity_x + 64) * 8) << 20) | ((uint)((velocity_y + 64) * 8) << 10) | ((uint)((velocity_z + 64) * 8));
+        obj.v = (((uint)(cur_tex) << 30) | (uint)((velocity_x + 64) * 8) << 20) | ((uint)((velocity_y + 64) * 8) << 10) | ((uint)((velocity_z + 64) * 8));
         obj.r = ((uint)(roomno) << 30) | ((uint)((position_z + 1024) * 32) << 14) | ((uint)((forward_x + 1) * 64) << 7) | ((uint)((forward_z + 1) * 64));
         string json = JsonUtility.ToJson(obj);
         //Debug.Log(json);
@@ -428,6 +428,7 @@ public class StateObject : MonoBehaviour {
                         float velocity_z = ((float)((item.v << 22) >> 22)) / 8 - 64; ;
                         float forward_x = ((float)((item.r << 18) >> 25)) / 64 - 1;
                         float forward_z = ((float)((item.r << 25) >> 25)) / 64 - 1;
+                        int tex = (int)(item.v >> 30);
 
                         GameObject gobj = null;
                         bool temp = false;
@@ -446,6 +447,7 @@ public class StateObject : MonoBehaviour {
                             gobj.GetComponent<Rigidbody>().MovePosition(new Vector3(position_x, position_y, position_z));
                             gobj.transform.forward = new Vector3(forward_x, 0f, forward_z);
                             gobj.transform.position = new Vector3(position_x, position_y, position_z);
+                            gobj.GetComponent<LoadPlayerTexture>().SetOfficialOutlook(tex);
                             Players.Add(gobj);
                         }
                         else if (item.id == GM.GetComponent<GameManagement>().id)
@@ -464,6 +466,7 @@ public class StateObject : MonoBehaviour {
                             tmpObj.transform.forward = new Vector3(forward_x, 0f, forward_z);
                             tmpObj.GetComponent<Rigidbody>().velocity = new Vector3(velocity_x, velocity_y, velocity_z);
                             tmpObj.GetComponent<movement>().setup(item.id, item.nickname);
+                            tmpObj.GetComponent<LoadPlayerTexture>().SetOfficialOutlook(tex);
                             Players.Add(tmpObj);
                             //GameObject roleInstance = Instantiate(GameObject.Find("role"), new Vector3(item.position_x, item.position_y, item.position_z), Quaternion.Euler(0f, 0f, 0f));
                             //roleInstance.transform.LookAt(roleInstance.transform.position + new Vector3(item.forward_x, 0, item.forward_z));

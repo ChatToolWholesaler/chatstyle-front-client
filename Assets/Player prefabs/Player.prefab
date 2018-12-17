@@ -38,10 +38,10 @@ GameObject:
   - component: {fileID: 4255579093841686}
   - component: {fileID: 33691585098566812}
   - component: {fileID: 23374388035737912}
-  - component: {fileID: 135993149403079814}
   - component: {fileID: 54554467016150330}
   - component: {fileID: 114546333874680950}
   - component: {fileID: 114329696087252784}
+  - component: {fileID: 65630387265242474}
   m_Layer: 1
   m_Name: Player
   m_TagString: Player
@@ -393,6 +393,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!65 &65630387265242474
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1320240177883058}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 3.858598, z: 1.081717}
+  m_Center: {x: -0.017444968, y: -1.421121, z: 0.2560885}
 --- !u!82 &82596180077413378
 AudioSource:
   m_ObjectHideFlags: 1
@@ -694,6 +706,7 @@ MonoBehaviour:
   officialPreset1: {fileID: 2800000, guid: 5cc27a235ec57924f8258011aceeac09, type: 3}
   officialPreset2: {fileID: 2800000, guid: 7ea66b32f1afe5248b820e784506ecd5, type: 3}
   officialPreset3: {fileID: 2800000, guid: 06c3f757b24c902479f95285acceb1f4, type: 3}
+  inUseOfficialPresetIndex: -1
 --- !u!114 &114414482089467516
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -836,18 +849,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9823b1d75f896d449fdb8837064b03a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!135 &135993149403079814
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1320240177883058}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!212 &212295500595118228
 SpriteRenderer:
   m_ObjectHideFlags: 1

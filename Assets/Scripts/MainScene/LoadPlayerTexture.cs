@@ -13,7 +13,7 @@ public class LoadPlayerTexture : MonoBehaviour {
     public Texture2D officialPreset0, officialPreset1, officialPreset2, officialPreset3;
     public int inUseOfficialPresetIndex = -1;
 
-    void SetOfficialOutlook(int officialIndex)
+    public void SetOfficialOutlook(int officialIndex)
     {
         //int inUseOfficialPresetIndex = 0;//【】
         switch (officialIndex)
@@ -73,7 +73,7 @@ public class LoadPlayerTexture : MonoBehaviour {
         {
             if (inUseOfficialPresetIndex == -1)
             {
-                SetOfficialOutlook(0);
+                GetComponent<MeshRenderer>().material.SetTexture("_MainTex", defaultAlbedo);
             }
             else
             {
