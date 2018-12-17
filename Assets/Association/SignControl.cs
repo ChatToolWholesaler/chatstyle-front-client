@@ -32,7 +32,7 @@ public class SignControl : MonoBehaviour {
         WWWForm form1 = new WWWForm();
         form1.AddField("userId", int.Parse(GameObject.Find("GameManagement").GetComponent<GameManagement>().id));
         form1.AddField("sign", sign);
-        StartCoroutine(GameObject.Find("StateObject").GetComponent<StateObject>().set_sign("http://localhost:3000/api/v1/user/setSign", form1));
+        StartCoroutine(GameObject.Find("StateObject").GetComponent<StateObject>().set_sign("http://" + GameObject.Find("StateObject").GetComponent<StateObject>().urlip + ":3000/api/v1/user/setSign", form1));
         GetComponent<Image>().sprite = hide;
     }
 

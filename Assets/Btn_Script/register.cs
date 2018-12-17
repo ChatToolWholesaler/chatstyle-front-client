@@ -40,7 +40,7 @@ public class register : MonoBehaviour
         form.AddField("password", password);
         form.AddField("nickname", nickname);
         form.AddField("gender", (gender ? 1 : 0));
-        StartCoroutine(GameObject.Find("StateObject").GetComponent<StateObject>().register("http://localhost:3000/api/v1/user/register", form));
+        StartCoroutine(GameObject.Find("StateObject").GetComponent<StateObject>().register("http://" + GameObject.Find("StateObject").GetComponent<StateObject>().urlip + ":3000/api/v1/user/register", form));
 
     }
     public bool IsNumeric(string str)

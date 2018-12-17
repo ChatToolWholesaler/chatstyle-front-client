@@ -17,6 +17,7 @@ public class StateObject : MonoBehaviour {
     public string ip = "vipgz1.idcfengye.com";
     public int pos_port = 10134;
     public int msg_port = 10135;
+    public string urlip = "192.168.1.124";
     public ClientSocket pos_Socket;
     public ClientSocket msg_Socket;
     public GameObject prefabs = null;
@@ -126,15 +127,15 @@ public class StateObject : MonoBehaviour {
                 WWWForm form0 = new WWWForm();
                 form0.AddField("userId", int.Parse(GM.GetComponent<GameManagement>().id));
                 form0.AddField("type", 0);
-                StartCoroutine(acquire("http://localhost:3000/api/v1/friend/getFriendsList", form0, 0));
+                StartCoroutine(acquire("http://" + GameObject.Find("StateObject").GetComponent<StateObject>().urlip + ":3000/api/v1/friend/getFriendsList", form0, 0));
                 WWWForm form1 = new WWWForm();
                 form1.AddField("userId", int.Parse(GM.GetComponent<GameManagement>().id));
                 form1.AddField("type", 1);
-                StartCoroutine(acquire("http://localhost:3000/api/v1/friend/getFriendsList", form1, 1));
+                StartCoroutine(acquire("http://" + GameObject.Find("StateObject").GetComponent<StateObject>().urlip + ":3000/api/v1/friend/getFriendsList", form1, 1));
                 WWWForm form2 = new WWWForm();
                 form2.AddField("userId", int.Parse(GM.GetComponent<GameManagement>().id));
                 form2.AddField("type", 2);
-                StartCoroutine(acquire("http://localhost:3000/api/v1/friend/getFriendsList", form2, 2));
+                StartCoroutine(acquire("http://" + GameObject.Find("StateObject").GetComponent<StateObject>().urlip + ":3000/api/v1/friend/getFriendsList", form2, 2));
             }
             else
             {

@@ -235,7 +235,7 @@ public class GameManagement : MonoBehaviour {
             form1.AddField("roomno", RoomNo);
             form1.AddField("userId",int.Parse(id));
             form1.AddField("type", 1);
-            StartCoroutine(GameObject.Find("StateObject").GetComponent<StateObject>().go_online("http://localhost:3000/api/v1/user/setOnline", form1));
+            StartCoroutine(GameObject.Find("StateObject").GetComponent<StateObject>().go_online("http://"+ GameObject.Find("StateObject").GetComponent<StateObject>().urlip + ":3000/api/v1/user/setOnline", form1));
             GameObject.Find("StateObject").GetComponent<StateObject>().sendmsg(1, m_Targets.position.x, m_Targets.position.y, m_Targets.position.z, RoomNo, id, nickname, 2, nickname + "上线了");
         }
         else {

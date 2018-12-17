@@ -10,7 +10,7 @@ public class ARRequest : MonoBehaviour {
         form1.AddField("userId", int.Parse(GameObject.Find("GameManagement").GetComponent<GameManagement>().id));
         form1.AddField("friendId", int.Parse(GetComponentInParent<RequestItemControl>().id));
         form1.AddField("agree", 1);
-        StartCoroutine(GameObject.Find("StateObject").GetComponent<StateObject>().apply_pull("http://localhost:3000/api/v1/friend/acceptFriend", form1));
+        StartCoroutine(GameObject.Find("StateObject").GetComponent<StateObject>().apply_pull("http://" + GameObject.Find("StateObject").GetComponent<StateObject>().urlip + ":3000/api/v1/friend/acceptFriend", form1));
     }
     public void rejectrequest()
     {
@@ -18,6 +18,6 @@ public class ARRequest : MonoBehaviour {
         form1.AddField("userId", int.Parse(GameObject.Find("GameManagement").GetComponent<GameManagement>().id));
         form1.AddField("friendId", int.Parse(GetComponentInParent<RequestItemControl>().id));
         form1.AddField("agree", 0);
-        StartCoroutine(GameObject.Find("StateObject").GetComponent<StateObject>().apply_pull("http://localhost:3000/api/v1/friend/acceptFriend", form1));
+        StartCoroutine(GameObject.Find("StateObject").GetComponent<StateObject>().apply_pull("http://" + GameObject.Find("StateObject").GetComponent<StateObject>().urlip + ":3000/api/v1/friend/acceptFriend", form1));
     }
 }

@@ -10,7 +10,7 @@ public class AddFriend : MonoBehaviour {
         form1.AddField("initiativeAddId", int.Parse(GameObject.Find("GameManagement").GetComponent<GameManagement>().id));
         form1.AddField("passiveAddId", int.Parse(GetComponentInParent<InteractionControl>().id));
         form1.AddField("type", 0);
-        StartCoroutine(GameObject.Find("StateObject").GetComponent<StateObject>().apply_pull("http://localhost:3000/api/v1/friend/addFriend", form1));
+        StartCoroutine(GameObject.Find("StateObject").GetComponent<StateObject>().apply_pull("http://" + GameObject.Find("StateObject").GetComponent<StateObject>().urlip + ":3000/api/v1/friend/addFriend", form1));
     }
     public void pullblack()
     {
@@ -18,6 +18,6 @@ public class AddFriend : MonoBehaviour {
         form1.AddField("initiativeAddId", int.Parse(GameObject.Find("GameManagement").GetComponent<GameManagement>().id));
         form1.AddField("passiveAddId", int.Parse(GetComponentInParent<InteractionControl>().id));
         form1.AddField("type", 1);
-        StartCoroutine(GameObject.Find("StateObject").GetComponent<StateObject>().apply_pull("http://localhost:3000/api/v1/friend/addFriend", form1));
+        StartCoroutine(GameObject.Find("StateObject").GetComponent<StateObject>().apply_pull("http://" + GameObject.Find("StateObject").GetComponent<StateObject>().urlip + ":3000/api/v1/friend/addFriend", form1));
     }
 }

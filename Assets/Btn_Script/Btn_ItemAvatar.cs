@@ -44,7 +44,7 @@ public class Btn_ItemAvatar : MonoBehaviour {
             Debug.Log("查看的id：" + int.Parse(id));
             WWWForm form1 = new WWWForm();
             form1.AddField("user_id", int.Parse(id));
-            StartCoroutine(GameObject.Find("StateObject").GetComponent<StateObject>().get_info("http://localhost:3000/api/v1/user/getUserInfo", form1));
+            StartCoroutine(GameObject.Find("StateObject").GetComponent<StateObject>().get_info("http://" + GameObject.Find("StateObject").GetComponent<StateObject>().urlip + ":3000/api/v1/user/getUserInfo", form1));
         }
         
     }
