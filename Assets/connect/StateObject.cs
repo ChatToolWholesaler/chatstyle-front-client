@@ -698,6 +698,7 @@ public class StateObject : MonoBehaviour {
     public Vector3 position;
     public Vector3 forward;
     public Vector3 velocity;
+    public int cur_tex;
 
     void Start()
     {

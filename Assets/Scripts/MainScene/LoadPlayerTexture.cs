@@ -11,6 +11,7 @@ public class LoadPlayerTexture : MonoBehaviour {
     const int albedoHeight = 512;
     public Texture2D defaultAlbedo;
     public Texture2D officialPreset0, officialPreset1, officialPreset2, officialPreset3;
+    public int inUseOfficialPresetIndex;
 
     void Start()
     {
@@ -50,7 +51,7 @@ public class LoadPlayerTexture : MonoBehaviour {
         }
         else
         {
-            int inUseOfficialPresetIndex = 0;//【】
+            //int inUseOfficialPresetIndex = 0;//【】
             switch (inUseOfficialPresetIndex)
             {
                 case 0:
