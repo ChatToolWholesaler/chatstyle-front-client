@@ -14,7 +14,7 @@ public class login : MonoBehaviour {
         form.AddField("password", password);
         Debug.Log("http://" + GameObject.Find("StateObject").GetComponent<StateObject>().urlip + ":3000/api/v1/user/login");
         StartCoroutine(GameObject.Find("StateObject").GetComponent<StateObject>().login("http://" + GameObject.Find("StateObject").GetComponent<StateObject>().urlip + ":3000/api/v1/user/login", form));
-        //GameObject.Find("GameManagement").GetComponent<GameManagement>().LoginOK("123", "卿");
+        //GameObject.Find("GameManagement").GetComponent<GameManagement>().LoginOK("123", "卿","个性签名",true);
         //向后台发送数据
     }
 }

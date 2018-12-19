@@ -485,6 +485,7 @@ MonoBehaviour:
   officialPreset1: {fileID: 2800000, guid: 5cc27a235ec57924f8258011aceeac09, type: 3}
   officialPreset2: {fileID: 2800000, guid: 7ea66b32f1afe5248b820e784506ecd5, type: 3}
   officialPreset3: {fileID: 2800000, guid: 06c3f757b24c902479f95285acceb1f4, type: 3}
+  inUseOfficialPresetIndex: -1
 --- !u!114 &678999071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1163,7 +1164,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &1507704375
 Canvas:

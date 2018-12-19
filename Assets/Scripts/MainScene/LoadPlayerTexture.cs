@@ -12,6 +12,7 @@ public class LoadPlayerTexture : MonoBehaviour {
     public Texture2D defaultAlbedo;
     public Texture2D officialPreset0, officialPreset1, officialPreset2, officialPreset3;
     public int inUseOfficialPresetIndex = -1;
+    SkinnedMeshRenderer SMR;
 
     public void SetOfficialOutlook(int officialIndex)
     {
@@ -20,21 +21,22 @@ public class LoadPlayerTexture : MonoBehaviour {
         {
             case 0:
                 //更新材质
-                GetComponent<MeshRenderer>().material.SetTexture("_MainTex", officialPreset0); break;
+                SMR.material.SetTexture("_MainTex", officialPreset0); break;
             case 1:
                 //更新材质
-                GetComponent<MeshRenderer>().material.SetTexture("_MainTex", officialPreset1); break;
+                SMR.material.SetTexture("_MainTex", officialPreset1); break;
             case 2:
                 //更新材质
-                GetComponent<MeshRenderer>().material.SetTexture("_MainTex", officialPreset2); break;
+                SMR.material.SetTexture("_MainTex", officialPreset2); break;
             case 3:
                 //更新材质
-                GetComponent<MeshRenderer>().material.SetTexture("_MainTex", officialPreset3); break;
+                SMR.material.SetTexture("_MainTex", officialPreset3); break;
         }
     }
 
     void Start()
     {
+        SMR = GetComponentInChildren<SkinnedMeshRenderer>();
         if (gameObject.name == "role") { isControlledByUser = true; }
 
         if (isControlledByUser)
@@ -47,7 +49,7 @@ public class LoadPlayerTexture : MonoBehaviour {
             {
                 //PlayerPrefs.SetInt("inUsePresetIndex", 0);//【】缺乏新手引导，先这么写，因为如果key为空说明本地没有存储任何皮肤
                 //更新材质
-                GetComponent<MeshRenderer>().material.SetTexture("_MainTex", defaultAlbedo);
+                SMR.material.SetTexture("_MainTex", defaultAlbedo);
             }
             else
             {
@@ -66,14 +68,14 @@ public class LoadPlayerTexture : MonoBehaviour {
                 texture.LoadImage(bytes);
 
                 //更新材质
-                GetComponent<MeshRenderer>().material.SetTexture("_MainTex", texture);
+                SMR.material.SetTexture("_MainTex", texture);
             }
         }
         else
         {
             if (inUseOfficialPresetIndex == -1)
             {
-                GetComponent<MeshRenderer>().material.SetTexture("_MainTex", defaultAlbedo);
+                SMR.material.SetTexture("_MainTex", defaultAlbedo);
             }
             else
             {

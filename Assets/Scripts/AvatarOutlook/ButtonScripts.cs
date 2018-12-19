@@ -111,12 +111,12 @@ public class ButtonScripts : MonoBehaviour {
         if (hint.activeSelf)
         {
             hint.SetActive(false);
-            btn.GetComponentInChildren<Text>().text = "显示操作提示";
+            btn.GetComponentInChildren<Text>().text = "Tips";
         }
         else
         {
             hint.SetActive(true);
-            btn.GetComponentInChildren<Text>().text = "隐藏操作提示";
+            btn.GetComponentInChildren<Text>().text = "Tips";
         }
         print(this.gameObject.tag+ "click: show/hide operation hints");
     }
